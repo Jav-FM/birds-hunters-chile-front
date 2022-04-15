@@ -4,7 +4,7 @@ import { Form, Button } from "react-bootstrap";
 const Login = () => {
   return (
     <div id="login" className="d-flex flex-column align-items-center">
-      <h2 class="my-5">Inicia sesión</h2>
+      <h2 classNames="my-5">Inicia sesión</h2>
       <CustomFormContainer>
         <Form className="d-flex flex-column align-items-center">
           <Form.Group className="mb-3" controlId="formBasicEmail">
