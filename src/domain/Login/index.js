@@ -7,7 +7,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { loadingActions } from "../../store/loading";
 import { birdsActions } from "../../store/birds";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Alert } from "react-bootstrap";
+import UserService from "../../request/services/UserService";
+import jwt_decode from "jwt-decode";
+import { loginActions } from "../../store/login";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [disabledButton, setDisabledButton] = useState(true);
@@ -19,6 +23,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [alertContent, setAlertContent] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(loadingActions.setLoading(true));
@@ -61,7 +66,7 @@ const Login = () => {
     if (email !== "") {
       validateEmail(email)
         ? setEmailError("")
-        : setEmailError("Ingresa un correo válido. asdasdasdasd asd asd asdasd");
+        : setEmailError("Ingresa un correo válido.");
     } else {
       setEmailError("");
     }
@@ -75,12 +80,41 @@ const Login = () => {
     }
   }, [email, password, emailError]);
 
+  const handleIngresar = async () => {
+    dispatch(loadingActions.setLoading(true));
+    try {
+      const loginData = {
+        email: email,
+        password: password,
+      };
+      const response = await UserService.loginUser(loginData);
+      const data = await response.data;
+      localStorage.setItem("token", data.token);
+      const info = jwt_decode(data.token);
+      dispatch(loginActions.login(info));
+      navigate("/userHome")
+    } catch (e) {
+      console.log(e)
+      if(!e.data.message)setAlertContent("No se pudo establecer conexión con el servidor.");
+      setAlertContent(e.data.message);
+      dispatch(loadingActions.setLoading(false));
+      setTimeout(() => {
+        setAlertContent('');
+      }, 5000);
+    }
+  };
+
   return (
     <React.Fragment>
       {loading ? (
         <LoadingScreen />
       ) : (
         <div id="login" className="d-flex flex-column align-items-center">
+          {alertContent !== "" && (
+            <Alert variant="danger" className="mt-2 mb-0">
+              {alertContent}
+            </Alert>
+          )}
           <h2 className="my-5">Inicia sesión</h2>
           <div className="d-flex flex-wrap mb-5 gap-5 justify-content-center">
             {randomBird ? (
@@ -122,6 +156,7 @@ const Login = () => {
                   variant="secondary mt-4"
                   type="submit"
                   disabled={disabledButton}
+                  onClick={handleIngresar}
                 >
                   Ingresar
                 </Button>

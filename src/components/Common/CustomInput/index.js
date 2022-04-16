@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./CustomInput.scss";
 import { Form } from "react-bootstrap";
+import { BsExclamationCircleFill } from "react-icons/bs";
 
 const CustomInput = ({
   placeholder,
@@ -28,7 +28,29 @@ const CustomInput = ({
         {...restOfProps}
       />
 
-      {showError && <p id="input-alert">{errorText}</p>}
+      {showError && (
+        <div
+          className="d-flex align-items-start gap-1"
+          style={{
+            maxWidth: "220px",
+          }}
+        >
+          <p
+            style={{
+              color: "#ffffff",
+            }}
+          >
+            <BsExclamationCircleFill />
+          </p>
+          <p
+            style={{
+              color: "#ffffff"
+            }}
+          >
+            {errorText}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

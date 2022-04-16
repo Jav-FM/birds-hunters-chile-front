@@ -13,9 +13,6 @@ const loginSlice = createSlice({
       state.loginState = true;
       state.userData = payload;
     },
-    manipularTelon(state, { payload }) {
-      state.telon = payload;
-    },
     logout(state) {
       state.loginState = false;
       state.userData = {}
