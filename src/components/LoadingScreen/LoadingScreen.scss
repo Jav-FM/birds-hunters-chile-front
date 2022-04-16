@@ -1,0 +1,14 @@
+#loading-screen {
+  z-index: 8;
+  position: absolute;
+  width: 100vw;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 35vh;
+  #spinner {
+    width: 100px;
+    height: 100px;
+    color: #5a9216;
+  }
+}

@@ -2,16 +2,25 @@
 
 body {
   margin: 0;
-  background-color: #FFFFFF !important;
-  font-family: 'Open Sans', sans-serif !important;
+  background-color: #ffffff !important;
+  font-family: "Open Sans", sans-serif !important;
   font-weight: 400 !important;
   color: #202020 !important;
-  padding-bottom: 170px;
   height: 100%;
 }
 
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main {
+  flex: 1;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -47,17 +56,22 @@ p {
 
 .btn-primary {
   color: #fff !important;
-  background-color: #8BC34A !important; 
-  border-color: #8BC34A !important;
+  background-color: #8bc34a !important;
+  border-color: #8bc34a !important;
 }
 
 .btn-secondary {
   color: #3a3d3a !important;
-  background-color: #BEF67A !important; 
-  border-color: #BEF67A !important;
+  background-color: #bef67a !important;
+  border-color: #bef67a !important;
 }
 
+//Navbar y footer:
 .navbar {
-  background-color: #5A9216;
+  background-color: #5a9216;
 }
 
+//Spinners
+.spinner {
+  color: #5a9216;
+}

@@ -4,7 +4,7 @@ import React from "react";
 
 const CustomFooter = ({ navigation }) => {
   return (
-    <Navbar className="navbar fixed-bottom py-5" variant="dark" id="footer">
+    <Navbar className="navbar  py-5" variant="dark" id="footer">
       <Container fluid>
         <Nav className="mx-auto d-flex flex-column align-items-center">
           <Nav.Item className="footer-item">

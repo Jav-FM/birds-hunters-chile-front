@@ -1,0 +1,25 @@
+#birds-gallery {
+    .bird-card {
+        min-height: 344px;
+    }
+    .bird-card:hover {
+        cursor: pointer;
+    }
+    #pagination > li > a,
+    #pagination > li > a:hover {
+      color: #5a9216;
+    }
+
+    #pagination > li > span:hover {
+        color: #e2f5ca;
+    }
+
+    .page-item.active .page-link {
+        background-color: #5a9216 !important;
+        border-color: #5a9216;
+    }
+
+
+}
+
+
