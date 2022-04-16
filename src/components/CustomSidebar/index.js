@@ -20,10 +20,10 @@ const CustomSidebar = ({ ...restOfProps }) => {
         >
           <Container className="d-flex flex-column">
             <Nav className="me-auto d-flex flex-column pt-4">
-              <Nav.Link as={Link} to="/">
+              <Nav.Link as={Link} to="/mycaptures">
                 Mis capturas
               </Nav.Link>
-              <Nav.Link as={Link} to="/avepedia">
+              <Nav.Link as={Link} to="/newcapture">
                 Nueva captura
               </Nav.Link>
               <Nav.Link as={Link} to="/avepedia">

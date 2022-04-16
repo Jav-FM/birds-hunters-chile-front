@@ -6,6 +6,8 @@ import { Register } from "../domain/Register";
 import { Avepedia } from "../domain/Avepedia";
 import { AvepediaDetail } from "../domain/Avepedia/AvepediaDetail";
 import { UserHome } from "../domain/UserHome";
+import { MyCaptures } from "../domain/MyCaptures";
+import { NewCapture } from "../domain/NewCapture";
 import { CustomNavbar } from "../components/CustomNavbar";
 import { CustomFooter } from "../components/CustomFooter";
 import {CustomSidebar } from "../components/CustomSidebar"
@@ -56,6 +58,8 @@ function App() {
               <Route path="/" element={<UserHome />} />
               <Route path="/avepedia" element={<Avepedia />} />
               <Route path="/avepedia/:id" element={<AvepediaDetail />} />
+              <Route path="/mycaptures" element={<MyCaptures />} />
+              <Route path="/newcapture" element={<NewCapture />} />
             </React.Fragment>
           )}
         </Routes>
