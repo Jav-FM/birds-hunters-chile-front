@@ -2,11 +2,11 @@ import './Footer.scss'
 import { Navbar, Nav, Container } from "react-bootstrap";
 import React from "react";
 
-const CustomFooter = ({ navigation }) => {
+const CustomFooter = ({ ...restOfProps }) => {
   return (
-    <Navbar className="navbar  py-5" variant="dark" id="footer">
+    <Navbar className="navbar  py-5" variant="dark" id="footer" {...restOfProps}>
       <Container fluid>
-        <Nav className="mx-auto d-flex flex-column align-items-center">
+        <Nav id="footer-content" className="d-flex flex-column align-items-center justify-content-center">
           <Nav.Item className="footer-item">
           © Birds Hunters 2022
           </Nav.Item>

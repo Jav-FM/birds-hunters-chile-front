@@ -234,7 +234,7 @@ const Register = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Nombres</Form.Label>
+              <Form.Label>Nombre(s)</Form.Label>
               <CustomInput
                 type="text"
                 value={firstNames}

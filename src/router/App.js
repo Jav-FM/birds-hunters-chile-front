@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Home } from "../domain/Home";
 import { Login } from "../domain/Login";
@@ -8,6 +8,7 @@ import { AvepediaDetail } from "../domain/Avepedia/AvepediaDetail";
 import { UserHome } from "../domain/UserHome";
 import { CustomNavbar } from "../components/CustomNavbar";
 import { CustomFooter } from "../components/CustomFooter";
+import {CustomSidebar } from "../components/CustomSidebar"
 import { isLoginTokenValid } from "../utils/token";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/login";
@@ -18,6 +19,7 @@ function App() {
   const { loginState } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [mainPadding, setMainPadding] = useState("0")
 
   useEffect(() => {
     if (!isLoginTokenValid()) {
@@ -28,11 +30,19 @@ function App() {
     }
   }, []); // eslint-disable-line
 
+  useEffect(() => {
+    if(loginState){ setMainPadding("200px") } else {setMainPadding("0")}
+  }, [loginState])
+
   return (
     <div className="App">
-      <CustomNavbar />
+      <CustomNavbar/>
       <div id="main">
-        <Routes>
+        {loginState &&
+          <CustomSidebar id="main-sidebar" style={{width: '200px'}}/>
+        }
+        <div id="main-routes"  style={{paddingTop: '56px', paddingLeft: `${mainPadding}`}}>
+        <Routes >
           {!loginState || !isLoginTokenValid() ? (
             <React.Fragment>
               <Route path="/" element={<Home />} />
@@ -49,6 +59,7 @@ function App() {
             </React.Fragment>
           )}
         </Routes>
+        </div>
       </div>
       <CustomFooter />
     </div>

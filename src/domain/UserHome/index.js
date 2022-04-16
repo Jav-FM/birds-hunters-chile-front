@@ -8,18 +8,19 @@ import { loadingActions } from "../../store/loading";
 const UserHome = () => {
   const birds = useSelector((state) => state.birds.birds);
   const loading = useSelector((state) => state.loading.loading);
+  const { userData } = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (birds.length === 0) {
-      dispatch(loadingActions.setLoading(true));
-      fetch("https://aves.ninjas.cl/api/birds")
-        .then((response) => response.json())
-        .then((json) => {
-          dispatch(birdsActions.setBirds(json));
-          dispatch(loadingActions.setLoading(false));
-        });
-    }
+    // if (birds.length === 0) {
+    //   dispatch(loadingActions.setLoading(true));
+    //   fetch("https://aves.ninjas.cl/api/birds")
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //       dispatch(birdsActions.setBirds(json));
+    //       dispatch(loadingActions.setLoading(false));
+    //     });
+    // }
     dispatch(loadingActions.setLoading(false));
   }, []);
 
@@ -30,14 +31,10 @@ const UserHome = () => {
       ) : (
         <div id="home">
           <HomeHeader />
-          <h2>entraste!!</h2>
-          <div
-            id="home-photos"
-            className="container-fluid d-flex flex-wrap justify-content-center"
-          >
-            {birds.slice(7, 37).map((b, i) => {
-              return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
-            })}
+
+          <div id="home-photos" className="container mt-4 mb-5">
+            <h3>¡Hola {userData.names}!</h3>
+            <h4>Este es el estado actual de tus capturas:</h4>
           </div>
         </div>
       )}

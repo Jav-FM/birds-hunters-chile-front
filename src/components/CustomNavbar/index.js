@@ -1,4 +1,5 @@
 import React from "react";
+import './CustomNavbar.scss'
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +7,7 @@ import { loadingActions } from "../../store/loading";
 import { loginActions } from "../../store/login";
 import { useNavigate } from "react-router-dom";
 
-const CustomNavbar = () => {
+const CustomNavbar = ({...restOfProps}) => {
   const loading = useSelector((state) => state.loading.loading);
   const { loginState } = useSelector((state) => state.login);
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const CustomNavbar = () => {
   return (
     <React.Fragment>
       {!loading ? (
-        <Navbar expand="lg" collapseOnSelect className="navbar" variant="dark">
+        <Navbar id="navbar" expand="lg" collapseOnSelect className="navbar" variant="dark" {...restOfProps}>
           <Container fluid>
             <Navbar.Brand as={Link} to="/">
               Birds Hunters
