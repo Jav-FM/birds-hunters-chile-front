@@ -1,8 +1,9 @@
 import request from '../../index';
+const BASE_URL= 'http://localhost:8080/api/v1'
 
 const loginUser = (data) => {
   return request({
-    url: '/login',
+    url: `${BASE_URL}/login`,
     method: 'POST',
     data,
   });
@@ -10,7 +11,7 @@ const loginUser = (data) => {
 
 const createUser = (data) => {
     return request({
-      url: '/login',
+      url: `${BASE_URL}/users`,
       method: 'POST',
       data,
     });

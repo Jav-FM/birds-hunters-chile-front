@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { birdsActions } from "../../store/birds";
 import { loadingActions } from "../../store/loading";
 
-const Home = () => {
+const UserHome = () => {
   const birds = useSelector((state) => state.birds.birds);
   const loading = useSelector((state) => state.loading.loading);
   const dispatch = useDispatch();
@@ -30,6 +30,7 @@ const Home = () => {
       ) : (
         <div id="home">
           <HomeHeader />
+          <h2>entraste!!</h2>
           <div
             id="home-photos"
             className="container-fluid d-flex flex-wrap justify-content-center"
@@ -44,4 +45,4 @@ const Home = () => {
   );
 };
 
-export { Home };
+export { UserHome };

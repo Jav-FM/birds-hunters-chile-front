@@ -12,6 +12,7 @@ import UserService from "../../request/services/UserService";
 import jwt_decode from "jwt-decode";
 import { loginActions } from "../../store/login";
 import { useNavigate } from "react-router-dom";
+import { isAnyOf } from "@reduxjs/toolkit";
 
 const Login = () => {
   const [disabledButton, setDisabledButton] = useState(true);
@@ -80,7 +81,8 @@ const Login = () => {
     }
   }, [email, password, emailError]);
 
-  const handleIngresar = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     dispatch(loadingActions.setLoading(true));
     try {
       const loginData = {
@@ -92,14 +94,17 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       const info = jwt_decode(data.token);
       dispatch(loginActions.login(info));
-      navigate("/userHome")
+      navigate("/");
     } catch (e) {
-      console.log(e)
-      if(!e.data.message)setAlertContent("No se pudo establecer conexión con el servidor.");
-      setAlertContent(e.data.message);
       dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+
       setTimeout(() => {
-        setAlertContent('');
+        setAlertContent("");
       }, 5000);
     }
   };
@@ -156,7 +161,7 @@ const Login = () => {
                   variant="secondary mt-4"
                   type="submit"
                   disabled={disabledButton}
-                  onClick={handleIngresar}
+                  onClick={handleLogin}
                 >
                   Ingresar
                 </Button>

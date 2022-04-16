@@ -1,10 +1,23 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loadingActions } from "../../store/loading";
+import { loginActions } from "../../store/login";
+import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = () => {
   const loading = useSelector((state) => state.loading.loading);
+  const { loginState } = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(loadingActions.setLoading(true));
+    dispatch(loginActions.logout());
+    localStorage.removeItem("token");
+    navigate("/");
+  }
 
   return (
     <React.Fragment>
@@ -27,26 +40,37 @@ const CustomNavbar = () => {
                   Avepedia
                 </Nav.Link>
               </Nav>
-              <Nav>
-                <Nav.Link as={Link} to="/register">
-                  Registrate
-                </Nav.Link>
-                <Nav.Link as={Link} to="/login">
-                  Inicia sesión
-                </Nav.Link>
-              </Nav>
+              {!loginState ? (
+                <Nav>
+                  <Nav.Link as={Link} to="/register">
+                    Registrate
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/login">
+                    Inicia sesión
+                  </Nav.Link>
+                </Nav>
+              ) : (
+                <Nav>
+                  <Nav.Link onClick={handleLogout}>
+                    Cerrar sesión
+                  </Nav.Link>
+                </Nav>
+              )
+            
+            }
             </Navbar.Collapse>
           </Container>
         </Navbar>
-      )
-    :
-    (
-      <Navbar style={{height: '56px'}} collapseOnSelect className="navbar" variant="dark">
-        <Container fluid>
-        </Container>
-      </Navbar>
-    )
-    }
+      ) : (
+        <Navbar
+          style={{ height: "56px" }}
+          collapseOnSelect
+          className="navbar"
+          variant="dark"
+        >
+          <Container fluid></Container>
+        </Navbar>
+      )}
     </React.Fragment>
   );
 };

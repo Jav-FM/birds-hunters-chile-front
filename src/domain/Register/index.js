@@ -6,6 +6,8 @@ import { Form, Button, Alert } from "react-bootstrap";
 import { loadingActions } from "../../store/loading";
 import { useDispatch } from "react-redux";
 import { validate, format } from "rut.js";
+import UserService from "../../request/services/UserService";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,7 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState("");
   const [passwordReenter, setPasswordReenter] = useState("");
   const [passwordReenterError, setPasswordReenterError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(loadingActions.setLoading(false));
@@ -179,11 +182,41 @@ const Register = () => {
     passwordReenterError,
   ]);
 
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    dispatch(loadingActions.setLoading(true));
+    try {
+      const registerData = {
+        userTypeId: 2,
+        names: firstNames,
+        firstLastName,
+        secondLastName,
+        rut: format(id, { dots: false }),
+        adress: address,
+        phoneNumber: cellphone,
+        email,
+        password,
+      };
+      const response = await UserService.createUser(registerData);
+      if (response.data.ok) navigate("/login");
+    } catch (e) {
+      dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+      setTimeout(() => {
+        setAlertContent("");
+      }, 5000);
+    }
+  };
+
   return (
     <div id="register" className="d-flex flex-column align-items-center">
       {alertContent !== "" && (
         <Alert variant="danger" className="mt-2 mb-0">
-          asdasdasd
+          {alertContent}
         </Alert>
       )}
       <h2 className="my-5">Registrate</h2>
@@ -285,6 +318,7 @@ const Register = () => {
             variant="secondary mt-4"
             type="submit"
             disabled={disabledButton}
+            onClick={handleRegister}
           >
             Registrarse
           </Button>
