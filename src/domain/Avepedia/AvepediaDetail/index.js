@@ -8,8 +8,11 @@ import { loadingActions } from "../../../store/loading";
 import { Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import { FaCamera } from "react-icons/fa";
+import { FiCameraOff } from "react-icons/fi";
 
 const AvepediaDetail = ({ navigation }) => {
+  const { loginState } = useSelector((state) => state.login);
   const navigate = useNavigate();
   const { id } = useParams();
   const [bird, setBird] = useState(null);
@@ -33,15 +36,37 @@ const AvepediaDetail = ({ navigation }) => {
           id="avepedia-detail"
           className="d-flex flex-column justify-content-center align-items-between"
         >
-          <div
-            id="avepedia-detail-header"
-            className="container d-flex mt-5 align-items-center gap-2"
-          >
-            <h1 id="icon">
-              <BsArrowLeftCircleFill onClick={() => navigate("/avepedia")} />
-            </h1>
-            <h2>{bird.name.spanish}</h2>
-          </div>
+          {loginState ? (
+            <div
+              id="avepedia-detail-header"
+              className="container d-flex mt-5 align-items-center justify-content-between"
+            >
+              <div
+                className="d-flex align-items-center gap-2"
+              >
+                <h1 id="icon">
+                  <BsArrowLeftCircleFill
+                    onClick={() => navigate("/avepedia")}
+                  />
+                </h1>
+                <h2>{bird.name.spanish}</h2>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                <h4>Ver captura</h4>
+                <h3><FaCamera /></h3>
+              </div>
+            </div>
+          ) : (
+            <div
+              id="avepedia-detail-header"
+              className="container d-flex mt-5 align-items-center gap-2"
+            >
+              <h1 id="icon">
+                <BsArrowLeftCircleFill onClick={() => navigate("/avepedia")} />
+              </h1>
+              <h2>{bird.name.spanish}</h2>
+            </div>
+          )}
 
           <div className="container d-flex flex-wrap justify-content-evenly align-items-start gap-5">
             <div id="info" className="wrap-reverse">

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./UserHome.scss";
 import { HomeHeader } from "../../components/HomeHeader";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,12 +30,26 @@ const UserHome = () => {
       {loading ? (
         <LoadingScreen />
       ) : (
-        <div id="home">
+        <div id="userhome">
           <HomeHeader />
 
-          <div id="home-photos" className="container mt-4 mb-5">
+          <div id="userhome-metrix" className="container mt-4 mb-5">
             <h3>¡Hola {userData.names}!</h3>
             <h4>Este es el estado actual de tus capturas:</h4>
+            <div id="userhome-cards-container" className="d-flex flex-wrap gap-4 justify-content-evenly">
+              <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
+                <h4>Total de aves nativas capturadas</h4>
+                <h3>1/246</h3>
+              </div>
+              <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
+                <h4>Orden Taxonómico predominante</h4>
+                <h3>Apodiforme</h3>
+              </div>
+              <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
+                <h4>Última captura</h4>
+                <h3>Picaflor chico</h3>
+              </div>
+            </div>
           </div>
         </div>
       )}

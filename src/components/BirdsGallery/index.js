@@ -9,8 +9,12 @@ import {
   Button,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { FaCamera } from "react-icons/fa";
+import { FiCameraOff } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const BirdsGallery = ({ birds, ...restOfProps }) => {
+  const { loginState } = useSelector((state) => state.login);
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useState("");
   //   const [sortedBirds, setSortedBirds] = useState([]);
@@ -179,9 +183,18 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
                     onClick={() => navigate(`/avepedia/${item.uid}`)}
                   >
                     <Card.Img variant="top" src={item.images?.main} />
-                    <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
-                      <Card.Title>{item.name?.spanish}</Card.Title>
-                    </Card.Body>
+                    {loginState ? (
+                      <Card.Body className="pb-2 d-flex justify-content-between align-items-end">
+                        <Card.Title>{item.name?.spanish}</Card.Title>
+                        <h3>
+                          <FaCamera />
+                        </h3>
+                      </Card.Body>
+                    ) : (
+                      <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
+                        <Card.Title>{item.name?.spanish}</Card.Title>
+                      </Card.Body>
+                    )}
                   </Card>
                 ))}
             </div>
