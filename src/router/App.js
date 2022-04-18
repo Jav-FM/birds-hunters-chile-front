@@ -14,6 +14,7 @@ import {CustomSidebar } from "../components/CustomSidebar"
 import { isLoginTokenValid } from "../utils/token";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/login";
+import { userPhotosActions } from "../store/userPhotos";
 import { loadingActions } from "../store/loading";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +28,7 @@ function App() {
     if (!isLoginTokenValid()) {
       dispatch(loadingActions.setLoading(true));
       dispatch(loginActions.logout());
+      dispatch(userPhotosActions.setUserPhotos([]))
       localStorage.removeItem("token");
       navigate("/");
     }

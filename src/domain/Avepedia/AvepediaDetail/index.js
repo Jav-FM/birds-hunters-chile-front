@@ -13,6 +13,7 @@ import { FiCameraOff } from "react-icons/fi";
 
 const AvepediaDetail = ({ navigation }) => {
   const { loginState } = useSelector((state) => state.login);
+  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
   const { id } = useParams();
   const [bird, setBird] = useState(null);
@@ -72,7 +73,7 @@ const AvepediaDetail = ({ navigation }) => {
             <div id="info" className="wrap-reverse">
               <img
                 id="photo"
-                src={bird.images.gallery[0].url}
+                src={bird.images.gallery.length > 0 ? bird.images.gallery[0]?.url : bird.images.main}
                 alt={bird.name.spanish}
                 className="mb-5"
               />

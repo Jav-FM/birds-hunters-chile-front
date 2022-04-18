@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 
 const BirdsGallery = ({ birds, ...restOfProps }) => {
   const { loginState } = useSelector((state) => state.login);
+  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useState("");
   //   const [sortedBirds, setSortedBirds] = useState([]);
@@ -180,15 +181,25 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
                     className="bird-card"
                     key={index}
                     style={{ width: "18rem" }}
-                    onClick={() => navigate(`/avepedia/${item.uid}`)}
+                    onClick={ userPhotos.filter((p) => p.bird_id === item.uid)
+                      .length > 0 ? () => navigate(`/avepedia/${item.uid}`)
+                      : () => navigate(`/avepedia/${item.uid}`)
+                    }
                   >
                     <Card.Img variant="top" src={item.images?.main} />
                     {loginState ? (
                       <Card.Body className="pb-2 d-flex justify-content-between align-items-end">
                         <Card.Title>{item.name?.spanish}</Card.Title>
-                        <h3>
-                          <FaCamera />
-                        </h3>
+                        {userPhotos.filter((p) => p.bird_id === item.uid)
+                          .length > 0 ? (
+                          <h3>
+                            <FaCamera />
+                          </h3>
+                        ) : (
+                          <h3>
+                            <FiCameraOff />
+                          </h3>
+                        )}
                       </Card.Body>
                     ) : (
                       <Card.Body className="pb-2 d-flex justify-content-center align-items-end">

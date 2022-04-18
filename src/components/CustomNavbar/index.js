@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadingActions } from "../../store/loading";
 import { loginActions } from "../../store/login";
+import { userPhotosActions } from "../../store/userPhotos";
 import { useNavigate } from "react-router-dom";
 
 const CustomNavbar = ({...restOfProps}) => {
@@ -16,6 +17,7 @@ const CustomNavbar = ({...restOfProps}) => {
   const handleLogout = () => {
     dispatch(loadingActions.setLoading(true));
     dispatch(loginActions.logout());
+    dispatch(userPhotosActions.setUserPhotos([]))
     localStorage.removeItem("token");
     navigate("/");
   }
