@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import "./NewCapture.scss";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { CustomInput } from "../../components/Common/CustomInput";
-import { BirdsGallery } from "../../components/BirdsGallery";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingActions } from "../../store/loading";
 import { birdsActions } from "../../store/birds";
 import { GiEgyptianBird } from "react-icons/gi";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
 const NewCapture = () => {
   const [disabledButton, setDisabledButton] = useState(true);
   const birds = useSelector((state) => state.birds.birds);
   const loading = useSelector((state) => state.loading.loading);
   const dispatch = useDispatch();
+  const params = useParams();
+  const [selectedSpecies, setSelectedSpecies] = useState(params.bird_id ? params.bird_id : null);
 
   useEffect(() => {
     if (birds.length === 0) {
@@ -21,11 +23,16 @@ const NewCapture = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          dispatch(birdsActions.setBirds(json));
+          const orderedBirds = json.sort((a, b) =>
+            a.name.spanish.localeCompare(b.name.spanish)
+          );
+          dispatch(birdsActions.setBirds(orderedBirds));
           dispatch(loadingActions.setLoading(false));
         });
     }
   }, []);
+
+  console.log(selectedSpecies)
 
   return (
     <React.Fragment>
@@ -51,12 +58,19 @@ const NewCapture = () => {
             >
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Especie</Form.Label>
-                <Form.Select variant="danger">
-                <option>Todas</option>
-                {birds.map((u, i) => (
-                  <option key={i} value={birds.uid}>{u.name.spanish}</option>
-                ))}
-              </Form.Select>
+                <Form.Control as="select"
+                  value={selectedSpecies}
+                  onChange={(e) => setSelectedSpecies(e.target.value)}
+                >
+                    <option key={0} value={null}>
+                      Seleccionar
+                    </option>
+                  {birds.map((b, i) => (
+                    <option key={i+1} value={b.uid}>
+                      {b.name.spanish}
+                    </option>
+                  ))}
+                </Form.Control>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicEmail">

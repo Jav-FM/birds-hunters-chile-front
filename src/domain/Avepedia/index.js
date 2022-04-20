@@ -17,7 +17,8 @@ const Avepedia = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          dispatch(birdsActions.setBirds(json));
+          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          dispatch(birdsActions.setBirds(orderedBirds));
           dispatch(loadingActions.setLoading(false));
         });
     }

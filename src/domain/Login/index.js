@@ -31,7 +31,8 @@ const Login = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          dispatch(birdsActions.setBirds(json));
+          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          dispatch(birdsActions.setBirds(orderedBirds));
           const newRandomBird = json[Math.floor(Math.random() * json.length)];
           setRandomBird(newRandomBird);
           dispatch(loadingActions.setLoading(false));
@@ -49,7 +50,8 @@ const Login = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          dispatch(birdsActions.setBirds(json));
+          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          dispatch(birdsActions.setBirds(orderedBirds));
         });
     }
     const newRandomBird = birds[Math.floor(Math.random() * birds.length)];

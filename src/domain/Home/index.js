@@ -16,7 +16,8 @@ const Home = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          dispatch(birdsActions.setBirds(json));
+          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          dispatch(birdsActions.setBirds(orderedBirds));
           dispatch(loadingActions.setLoading(false));
         });
     }
@@ -34,7 +35,7 @@ const Home = () => {
             id="home-photos"
             className="container-fluid d-flex flex-wrap justify-content-center"
           >
-            {birds.slice(7, 37).map((b, i) => {
+            {birds.slice(47, 77).map((b, i) => {
               return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
             })}
           </div>

@@ -1,17 +1,13 @@
 import React, { useState, useReducer, useEffect } from "react";
-import "./BirdsGallery.scss";
+import "./CapturesGallery.scss";
 import { Card, Pagination } from "react-bootstrap";
-import {
-  Spinner,
-  InputGroup,
-  FormControl,
-} from "react-bootstrap";
+import { Spinner, InputGroup, Form, FormControl } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
 import { FiCameraOff } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
-const BirdsGallery = ({ birds, ...restOfProps }) => {
+const CapturesGallery = ({ ...restOfProps }) => {
   const { loginState } = useSelector((state) => state.login);
   const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
@@ -35,7 +31,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
   };
 
   const initialState = {
-    data: birds,
+    data: userPhotos,
     offset: 0,
     numberPerPage: 12,
     pageCount: 0,
@@ -46,14 +42,14 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
 
   useEffect(() => {
     if (nameFilter !== "") {
-      const filteredBirds = birds.filter((b) =>
-        b.name.spanish.toLowerCase().includes(nameFilter.toLowerCase())
+      const filteredPhotos = userPhotos.filter((b) =>
+        b.name.toLowerCase().includes(nameFilter.toLowerCase())
       );
-      dispatch({ type: "setData", payload: filteredBirds });
+      dispatch({ type: "setData", payload: filteredPhotos });
     } else {
-      dispatch({ type: "setData", payload: birds });
+      dispatch({ type: "setData", payload: userPhotos });
     }
-  }, [nameFilter, birds]);
+  }, [nameFilter, userPhotos]);
 
   useEffect(() => {
     dispatch({
@@ -63,7 +59,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
         state.offset + state.numberPerPage
       ),
     });
-  }, [state.numberPerPage, state.offset, state.data, nameFilter, birds]);
+  }, [state.numberPerPage, state.offset, state.data, nameFilter, userPhotos]);
 
   const handleClick = (e) => {
     const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
@@ -95,17 +91,58 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     );
   }
 
+  const taxonomicOrders = [
+    "Accipitriformes",
+    "Anseriformes",
+    "Apodiformes",
+    "Caprimulgiformes",
+    "Cathartiformes",
+    "Charadriiformes",
+    "Columbiformes",
+    "Coraciiformes",
+    "Falconiformes",
+    "Galliformes",
+    "Gruiformes",
+    "Sphenisciformes",
+    "Strigiformes",
+    "Suliformes",
+    "Passeriformes - Suborden Passeres",
+    "Passeriformes - Suborden Tyranni",
+    "Pelecaniformes",
+    "Phoenicopteriformes",
+    "Piciformes",
+    "Procellariiformes",
+    "Podicipediformes",
+    "Psittaciformes",
+    "Rheiformes",
+    "Tinamiformes",
+  ];
+
   const handleChange = (e) => {
-    e.preventDefault(); 
-    setNameFilter(e.target.value); 
+    e.preventDefault(); // prevent the default action
+    setNameFilter(e.target.value); // set name to e.target.value (event)
   };
 
   return (
     <React.Fragment>
-      {birds.length !== 0 ? (
+      {userPhotos.length !== 0 ? (
         <React.Fragment>
-          <div className="container mb-4 mx-5">
-            <InputGroup style={{ maxWidth: "400px" }} className="container mb-4 mx-4">
+          <div className="container d-flex flex-wrap gap-3 mb-4 justify-content-around">
+            <InputGroup style={{ maxWidth: "400px", height: "0px" }}>
+              <InputGroup.Text style={{ backgroundColor: "#bef67a" }}>
+                Selecciona taxonomía
+              </InputGroup.Text>
+              <Form.Control as="select">
+                <option>Todas</option>
+                {taxonomicOrders.map((o, i) => (
+                  <option key={i}>{o}</option>
+                ))}
+              </Form.Control>
+            </InputGroup>
+            <InputGroup
+              style={{ maxWidth: "400px" }}
+              className="container mb-4 mx-4"
+            >
               <InputGroup.Text style={{ backgroundColor: "#bef67a" }}>
                 Busca por nombre
               </InputGroup.Text>
@@ -126,33 +163,20 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
             <div className="d-flex flex-wrap gap-4 justify-content-center mb-4">
               {state.currentData &&
                 state.currentData.map((item, index) => (
-                  <Card
-                    className="bird-card"
-                    key={index}
-                    style={{ width: "18rem" }}
-                    onClick={() => navigate(`/avepedia/${item.uid}`)}
-                  >
-                    <Card.Img variant="top" src={item.images?.main} />
-                    {loginState ? (
-                      <Card.Body className="pb-2 d-flex justify-content-between align-items-end">
-                        <Card.Title>{item.name?.spanish}</Card.Title>
-                        {userPhotos.filter((p) => p.bird_id === item.uid)
-                          .length > 0 ? (
-                          <h3>
-                            <FaCamera />
-                          </h3>
-                        ) : (
-                          <h3>
-                            <FiCameraOff />
-                          </h3>
-                        )}
-                      </Card.Body>
-                    ) : (
+                  <React.Fragment>
+                    <Card
+                      className="bird-card"
+                      key={index}
+                      style={{ width: "25rem" }}
+                      onClick={() => navigate(`/mycapturesdetail/${item.id}`)}
+                    >
+                      <Card.Img variant="top" src={`http://localhost:8080/birdsphotos/${item.photo}`} />
+
                       <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
-                        <Card.Title>{item.name?.spanish}</Card.Title>
+                        <Card.Title>{item.name}</Card.Title>
                       </Card.Body>
-                    )}
-                  </Card>
+                    </Card>
+                  </React.Fragment>
                 ))}
             </div>
 
@@ -168,4 +192,4 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
   );
 };
 
-export { BirdsGallery };
+export { CapturesGallery };

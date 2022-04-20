@@ -5,13 +5,13 @@ import { BirdsGallery } from "../../../components/BirdsGallery";
 import { useSelector, useDispatch } from "react-redux";
 import { birdsActions } from "../../../store/birds";
 import { loadingActions } from "../../../store/loading";
-import { Spinner } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { FaCamera } from "react-icons/fa";
 import { FiCameraOff } from "react-icons/fi";
 
-const AvepediaDetail = ({ navigation }) => {
+const AvepediaDetail = () => {
   const { loginState } = useSelector((state) => state.login);
   const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
@@ -42,9 +42,7 @@ const AvepediaDetail = ({ navigation }) => {
               id="avepedia-detail-header"
               className="container d-flex mt-5 align-items-center justify-content-between"
             >
-              <div
-                className="d-flex align-items-center gap-2"
-              >
+              <div className="d-flex align-items-center gap-2">
                 <h1 id="icon">
                   <BsArrowLeftCircleFill
                     onClick={() => navigate("/avepedia")}
@@ -52,10 +50,39 @@ const AvepediaDetail = ({ navigation }) => {
                 </h1>
                 <h2>{bird.name.spanish}</h2>
               </div>
-              <div className="d-flex align-items-center gap-2">
-                <h4>Ver captura</h4>
-                <h3><FaCamera /></h3>
-              </div>
+              {userPhotos.filter((p) => p.bird_id === id).length > 0 ? (
+                <div className="d-flex align-items-center gap-2">
+                  <h4>Capturada</h4>
+                  <h3>
+                    <FaCamera />
+                  </h3>
+                  <Button
+                    className="mx-2"
+                    onClick={() =>
+                      navigate(
+                        `/mycapturesdetail/${
+                          userPhotos.filter((p) => p.bird_id === id)[0].id
+                        }`
+                      )
+                    }
+                  >
+                    Ver captura
+                  </Button>
+                </div>
+              ) : (
+                <div className="d-flex align-items-center gap-2">
+                  <h4>No capturada</h4>
+                  <h3>
+                    <FiCameraOff />
+                  </h3>
+                  <Button
+                    className="mx-2"
+                    onClick={() => navigate(`/newcapture/${id}`)}
+                  >
+                    Subir captura
+                  </Button>
+                </div>
+              )}
             </div>
           ) : (
             <div
@@ -73,7 +100,11 @@ const AvepediaDetail = ({ navigation }) => {
             <div id="info" className="wrap-reverse">
               <img
                 id="photo"
-                src={bird.images.gallery.length > 0 ? bird.images.gallery[0]?.url : bird.images.main}
+                src={
+                  bird.images.gallery.length > 0
+                    ? bird.images.gallery[0]?.url
+                    : bird.images.main
+                }
                 alt={bird.name.spanish}
                 className="mb-5"
               />
