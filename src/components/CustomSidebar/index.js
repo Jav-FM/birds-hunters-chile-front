@@ -26,8 +26,8 @@ const CustomSidebar = ({ ...restOfProps }) => {
               <Nav.Link as={Link} to="/newcapture">
                 Nueva captura
               </Nav.Link>
-              <Nav.Link as={Link} to="/avepedia">
-                Editar perfil
+              <Nav.Link as={Link} to="/myprofile">
+                Mi perfil
               </Nav.Link>
             </Nav>
           </Container>

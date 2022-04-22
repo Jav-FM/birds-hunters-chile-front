@@ -133,10 +133,12 @@ const CapturesGallery = ({ ...restOfProps }) => {
                 Selecciona taxonomía
               </InputGroup.Text>
               <Form.Control as="select">
-                <option>Todas</option>
-                {taxonomicOrders.map((o, i) => (
-                  <option key={i}>{o}</option>
-                ))}
+                <option key={0}>Todas</option>
+                    {userPhotos.map((p, i) => (
+                      <option key={i + 1} value={p.order}>
+                        {p.order}
+                      </option>
+                    ))}
               </Form.Control>
             </InputGroup>
             <InputGroup

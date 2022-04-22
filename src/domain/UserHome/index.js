@@ -3,10 +3,11 @@ import "./UserHome.scss";
 import { HomeHeader } from "../../components/HomeHeader";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { userPhotosActions } from "../../store/userPhotos";
 import PhotosService from "../../request/services/PhotosService";
 import { loadingActions } from "../../store/loading";
-import { Alert } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import moment from "moment";
 
 const UserHome = () => {
@@ -16,15 +17,14 @@ const UserHome = () => {
   const [lastBirds, setLastBirds] = useState([]);
   const { userData } = useSelector((state) => state.login);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUserPhotos = async () => {
       try {
-        console.log(userData.id);
         const response = await PhotosService.getPhotoByUser(userData.id);
         const { data } = await response.data;
         dispatch(userPhotosActions.setUserPhotos(data));
-        console.log(data);
       } catch (e) {
         dispatch(loadingActions.setLoading(false));
         if (!e.data.error) {
@@ -46,19 +46,16 @@ const UserHome = () => {
 
   useEffect(() => {
     if (userPhotos.length > 0) {
-      const orderedByDay = userPhotos.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-      });
-      // .split("")
-      // .splice(0, 19)
-      // .join("")
-      // .toString();
 
-      console.log(orderedByDay);
-      const thisLastBirds = userPhotos.filter(
-        (b) => b.date === orderedByDay[0].date
-      );
-      setLastBirds(thisLastBirds[0]);
+      const mostResent = userPhotos.reduce((mostRecent, item) =>
+   item.date > mostRecent.date 
+   ? item
+   : mostRecent
+)
+
+
+
+      setLastBirds(mostResent);
     }
   }, [userPhotos]);
 
@@ -85,6 +82,12 @@ const UserHome = () => {
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
                 <h4>Total de aves nativas capturadas</h4>
                 <h3>{userPhotos.length}/246</h3>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate("/mycaptures")}
+                >
+                  Mis capturas
+                </Button>
               </div>
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
                 <h4>Orden Taxonómico predominante</h4>
@@ -102,7 +105,19 @@ const UserHome = () => {
                   <React.Fragment>
                     {" "}
                     <h3>{lastBirds.name}</h3>
-                    <h4>{moment(lastBirds.date).format("DD/MM/YYYY")}</h4>
+                    <div className="d-flex gap-3 align-items-center">
+                      <h4 className="mb-0">
+                        {moment(lastBirds.date).format("DD/MM/YYYY")}
+                      </h4>
+                      <Button
+                        variant="secondary"
+                        onClick={() =>
+                          navigate(`/mycapturesdetail/${lastBirds.id}`)
+                        }
+                      >
+                        Ver
+                      </Button>
+                    </div>
                   </React.Fragment>
                 )}
               </div>

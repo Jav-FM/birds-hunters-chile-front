@@ -9,6 +9,7 @@ import { UserHome } from "../domain/UserHome";
 import { MyCaptures } from "../domain/MyCaptures";
 import { MyCapturesDetail } from "../domain/MyCaptures/MyCapturesDetail";
 import { NewCapture } from "../domain/NewCapture";
+import {MyProfile} from "../domain/MyProfile"
 import { CustomNavbar } from "../components/CustomNavbar";
 import { CustomFooter } from "../components/CustomFooter";
 import { CustomSidebar } from "../components/CustomSidebar";
@@ -73,6 +74,7 @@ function App() {
                 {["/newcapture", "/newcapture/:bird_id"].map((page) => (
                   <Route path={page} element={<NewCapture />} />
                 ))}
+                <Route path="/myprofile" element={<MyProfile />} />
               </React.Fragment>
             )}
           </Routes>
