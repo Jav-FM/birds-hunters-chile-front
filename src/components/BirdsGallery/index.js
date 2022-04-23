@@ -65,7 +65,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     });
   }, [state.numberPerPage, state.offset, state.data, nameFilter, birds]);
 
-  const handleClick = (e) => {
+  const handlePaginationClick = (e) => {
     const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
     dispatch({
       type: "setOffset",
@@ -138,11 +138,11 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
                         <Card.Title>{item.name?.spanish}</Card.Title>
                         {userPhotos.filter((p) => p.bird_id === item.uid)
                           .length > 0 ? (
-                          <h3>
+                          <h3 style={{color: '#5a9216'}}>
                             <FaCamera />
                           </h3>
                         ) : (
-                          <h3>
+                          <h3 style={{color: '#5a9216'}}>
                             <FiCameraOff />
                           </h3>
                         )}
@@ -156,7 +156,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
                 ))}
             </div>
 
-            <Pagination className="mb-5" id="pagination" onClick={handleClick}>
+            <Pagination className="mb-5" id="pagination" onClick={handlePaginationClick}>
               {paginationItems}
             </Pagination>
           </div>

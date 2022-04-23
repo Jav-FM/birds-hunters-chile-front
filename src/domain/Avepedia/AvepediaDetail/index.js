@@ -45,7 +45,7 @@ const AvepediaDetail = () => {
               <div className="d-flex align-items-center gap-2">
                 <h1 id="icon">
                   <BsArrowLeftCircleFill
-                    onClick={() => navigate("/avepedia")}
+                    onClick={() => navigate(-1)}
                   />
                 </h1>
                 <h2>{bird.name.spanish}</h2>
@@ -54,7 +54,7 @@ const AvepediaDetail = () => {
                 <div className="d-flex align-items-center gap-2">
                   <h4>Capturada</h4>
                   <h3>
-                    <FaCamera />
+                    <FaCamera style={{color: '#5a9216'}}/>
                   </h3>
                   <Button
                     className="mx-2"
@@ -73,7 +73,7 @@ const AvepediaDetail = () => {
                 <div className="d-flex align-items-center gap-2">
                   <h4>No capturada</h4>
                   <h3>
-                    <FiCameraOff />
+                    <FiCameraOff style={{color: '#5a9216'}}/>
                   </h3>
                   <Button
                     className="mx-2"

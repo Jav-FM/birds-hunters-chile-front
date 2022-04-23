@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { HomeHeader } from "../../components/HomeHeader";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { loadingActions } from "../../store/loading";
 const Home = () => {
   const birds = useSelector((state) => state.birds.birds);
   const loading = useSelector((state) => state.loading.loading);
+  const [randomNumber, setRandomNumber] = useState(47);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,8 +17,18 @@ const Home = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          const orderedBirds = json.sort((a, b) =>
+            a.name.spanish.localeCompare(b.name.spanish)
+          );
           dispatch(birdsActions.setBirds(orderedBirds));
+          const randomNumber = (min, max) => {
+            const r = Math.random() * (max - min) + min;
+            return Math.floor(r);
+          };
+
+          const thisRandomNumber = randomNumber(1, 200);
+          setRandomNumber(thisRandomNumber);
+
           dispatch(loadingActions.setLoading(false));
         });
     }
@@ -35,7 +46,7 @@ const Home = () => {
             id="home-photos"
             className="container-fluid d-flex flex-wrap justify-content-center"
           >
-            {birds.slice(47, 77).map((b, i) => {
+            {birds.slice(randomNumber, randomNumber + 30).map((b, i) => {
               return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
             })}
           </div>

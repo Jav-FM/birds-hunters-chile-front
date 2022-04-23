@@ -1,27 +1,45 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { CapturesGallery } from "../../components/CapturesGallery";
 import { useSelector, useDispatch } from "react-redux";
 import { birdsActions } from "../../store/birds";
 import { loadingActions } from "../../store/loading";
-import { Spinner } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
+import PhotosService from "../../request/services/PhotosService";
+import { userPhotosActions } from "../../store/userPhotos";
+import { useNavigate } from "react-router-dom";
 
 const MyCaptures = () => {
-  const birds = useSelector((state) => state.birds.birds);
+  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
+  const { userData } = useSelector((state) => state.login);
+  const [alertContent, setAlertContent] = useState("");
   const loading = useSelector((state) => state.loading.loading);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (birds.length === 0) {
+    const getUserPhotos = async () => {
+      try {
+        const response = await PhotosService.getPhotoByUser(userData.id);
+        const { data } = await response.data;
+        dispatch(userPhotosActions.setUserPhotos(data));
+      } catch (e) {
+        dispatch(loadingActions.setLoading(false));
+        if (!e.data.error) {
+          setAlertContent("No se pudo establecer conexión con el servidor.");
+        } else {
+          setAlertContent(e.data.error);
+        }
+        setTimeout(() => {
+          setAlertContent("");
+        }, 5000);
+      }
+    };
+    if (userPhotos.length === 0) {
       dispatch(loadingActions.setLoading(true));
-      fetch("https://aves.ninjas.cl/api/birds")
-        .then((response) => response.json())
-        .then((json) => {
-          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
-          dispatch(birdsActions.setBirds(orderedBirds));
-          dispatch(loadingActions.setLoading(false));
-        });
+      getUserPhotos();
     }
+    dispatch(loadingActions.setLoading(false));
   }, []);
 
   return (
@@ -30,11 +48,19 @@ const MyCaptures = () => {
         <LoadingScreen />
       ) : (
         <div id="mycaptures" className="d-flex flex-column align-items-center">
+          {alertContent !== "" && (
+            <Alert variant="danger" className="mt-2 mb-0">
+              {alertContent}
+            </Alert>
+          )}
           <h1 className="my-5">Mis capturas</h1>
-          {birds.length !== 0 ? (
-            <CapturesGallery birds={birds} />
+          {userPhotos.length !== 0 ? (
+            <CapturesGallery />
           ) : (
-            <Spinner animation="border" className="spinner mt-5" />
+            <React.Fragment>
+              <h4 className="mt-4 mb-4">Aún no tienes capturas registradas</h4>
+              <Button onClick={() => navigate('/newcapture')}>Registrar nueva captura</Button>
+            </React.Fragment>
           )}
         </div>
       )}

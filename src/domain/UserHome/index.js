@@ -15,6 +15,7 @@ const UserHome = () => {
   const loading = useSelector((state) => state.loading.loading);
   const [alertContent, setAlertContent] = useState("");
   const [lastBirds, setLastBirds] = useState([]);
+  const [predominantOrder, setPredominantOrder] = useState("")
   const { userData } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -46,16 +47,19 @@ const UserHome = () => {
 
   useEffect(() => {
     if (userPhotos.length > 0) {
-
       const mostResent = userPhotos.reduce((mostRecent, item) =>
-   item.date > mostRecent.date 
-   ? item
-   : mostRecent
-)
-
-
-
+        item.date > mostRecent.date ? item : mostRecent
+      );
       setLastBirds(mostResent);
+      const orders = userPhotos.map((p) => p.order);
+      const mostRepitedOrder = orders.reduce(
+        (a, b, i, arr) =>
+          arr.filter((v) => v === a).length >= arr.filter((v) => v === b).length
+            ? a
+            : b,
+        null
+      );
+      setPredominantOrder(mostRepitedOrder)
     }
   }, [userPhotos]);
 
@@ -94,7 +98,7 @@ const UserHome = () => {
                 {userPhotos.length === 0 ? (
                   <h3>No aplica</h3>
                 ) : (
-                  <h3>pendiente</h3>
+                  <h3>{predominantOrder}</h3>
                 )}
               </div>
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">

@@ -3,15 +3,25 @@ import "./CapturesGallery.scss";
 import { Card, Pagination } from "react-bootstrap";
 import { Spinner, InputGroup, Form, FormControl } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaCamera } from "react-icons/fa";
-import { FiCameraOff } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 const CapturesGallery = ({ ...restOfProps }) => {
-  const { loginState } = useSelector((state) => state.login);
   const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useState("");
+  const [ordersForSelector, setOrdersForSelector] = useState([]);
+  const [filteredOrder, setFilteredOrder] = useState("");
+
+  useEffect(() => {
+    const orders = userPhotos.map((p) => p.order);
+    const result = orders.reduce((acc, item) => {
+      if (!acc.includes(item)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+    setOrdersForSelector(result);
+  }, [userPhotos]);
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -41,15 +51,28 @@ const CapturesGallery = ({ ...restOfProps }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (nameFilter !== "") {
-      const filteredPhotos = userPhotos.filter((b) =>
+    if (nameFilter !== "" && filteredOrder === "") {
+      const filteredPhotosByName = userPhotos.filter((b) =>
         b.name.toLowerCase().includes(nameFilter.toLowerCase())
       );
-      dispatch({ type: "setData", payload: filteredPhotos });
+      dispatch({ type: "setData", payload: filteredPhotosByName });
+    } else if (nameFilter === "" && filteredOrder !== "") {
+      const filteredPhotosByOrder = userPhotos.filter(
+        (b) => b.order === filteredOrder
+      );
+      dispatch({ type: "setData", payload: filteredPhotosByOrder });
+    } else if (nameFilter !== "" && filteredOrder !== "") {
+      const filteredPhotosByOrder = userPhotos.filter(
+        (b) => b.order === filteredOrder
+      );
+      const filteredPhotosByOrderAndName = filteredPhotosByOrder.filter((b) =>
+        b.name.toLowerCase().includes(nameFilter.toLowerCase())
+      );
+      dispatch({ type: "setData", payload: filteredPhotosByOrderAndName });
     } else {
       dispatch({ type: "setData", payload: userPhotos });
     }
-  }, [nameFilter, userPhotos]);
+  }, [nameFilter, filteredOrder, userPhotos]);
 
   useEffect(() => {
     dispatch({
@@ -61,7 +84,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     });
   }, [state.numberPerPage, state.offset, state.data, nameFilter, userPhotos]);
 
-  const handleClick = (e) => {
+  const handlePaginationClick = (e) => {
     const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
     dispatch({
       type: "setOffset",
@@ -91,33 +114,6 @@ const CapturesGallery = ({ ...restOfProps }) => {
     );
   }
 
-  const taxonomicOrders = [
-    "Accipitriformes",
-    "Anseriformes",
-    "Apodiformes",
-    "Caprimulgiformes",
-    "Cathartiformes",
-    "Charadriiformes",
-    "Columbiformes",
-    "Coraciiformes",
-    "Falconiformes",
-    "Galliformes",
-    "Gruiformes",
-    "Sphenisciformes",
-    "Strigiformes",
-    "Suliformes",
-    "Passeriformes - Suborden Passeres",
-    "Passeriformes - Suborden Tyranni",
-    "Pelecaniformes",
-    "Phoenicopteriformes",
-    "Piciformes",
-    "Procellariiformes",
-    "Podicipediformes",
-    "Psittaciformes",
-    "Rheiformes",
-    "Tinamiformes",
-  ];
-
   const handleChange = (e) => {
     e.preventDefault(); // prevent the default action
     setNameFilter(e.target.value); // set name to e.target.value (event)
@@ -132,13 +128,19 @@ const CapturesGallery = ({ ...restOfProps }) => {
               <InputGroup.Text style={{ backgroundColor: "#bef67a" }}>
                 Selecciona taxonomía
               </InputGroup.Text>
-              <Form.Control as="select">
-                <option key={0}>Todas</option>
-                    {userPhotos.map((p, i) => (
-                      <option key={i + 1} value={p.order}>
-                        {p.order}
-                      </option>
-                    ))}
+              <Form.Control
+                as="select"
+                value={filteredOrder}
+                onChange={(e) => setFilteredOrder(e.target.value)}
+              >
+                <option key={0} value={""}>
+                  Todas
+                </option>
+                {ordersForSelector.map((o, i) => (
+                  <option key={i + 1} value={o}>
+                    {o}
+                  </option>
+                ))}
               </Form.Control>
             </InputGroup>
             <InputGroup
@@ -172,7 +174,10 @@ const CapturesGallery = ({ ...restOfProps }) => {
                       style={{ width: "25rem" }}
                       onClick={() => navigate(`/mycapturesdetail/${item.id}`)}
                     >
-                      <Card.Img variant="top" src={`http://localhost:8080/birdsphotos/${item.photo}`} />
+                      <Card.Img
+                        variant="top"
+                        src={`http://localhost:8080/birdsphotos/${item.photo}`}
+                      />
 
                       <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
                         <Card.Title>{item.name}</Card.Title>
@@ -182,7 +187,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
                 ))}
             </div>
 
-            <Pagination className="mb-5" id="pagination" onClick={handleClick}>
+            <Pagination className="mb-5" id="pagination" onClick={handlePaginationClick}>
               {paginationItems}
             </Pagination>
           </div>
