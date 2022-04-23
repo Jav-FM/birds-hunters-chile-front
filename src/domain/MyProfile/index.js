@@ -2,18 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./MyProfile.scss";
 import { CustomFormContainer } from "../../components/CustomFormContainer";
 import { CustomInput } from "../../components/Common/CustomInput";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Modal } from "react-bootstrap";
 import { loadingActions } from "../../store/loading";
-import { useDispatch } from "react-redux";
+import { loginActions } from "../../store/login";
+import { userPhotosActions } from "../../store/userPhotos";
+import { useDispatch, useSelector } from "react-redux";
 import { validate, format } from "rut.js";
 import UserService from "../../request/services/UserService";
 import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
   const dispatch = useDispatch();
-  const [disabledButton, setDisabledButton] = useState(true);
-  const [id, setId] = useState("");
-  const [idError, setIdError] = useState("");
+  const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.login);
+  const [disabledSaveButton, setDisabledSaveButton] = useState(true);
+  const [thisUser, setThisUser] = useState({});
+  const [rut, setRut] = useState("");
+  const [rutError, setRutError] = useState("");
   const [firstNames, setFirstNames] = useState("");
   const [firstNamesError, setFirstNamesError] = useState("");
   const [firstLastName, setFirstLastName] = useState("");
@@ -26,14 +31,45 @@ const MyProfile = () => {
   const [cellphoneError, setCellphoneError] = useState("");
   const [address, setAddress] = useState("");
   const [alertContent, setAlertContent] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordReenter, setPasswordReenter] = useState("");
-  const [passwordReenterError, setPasswordReenterError] = useState("");
-  const navigate = useNavigate();
+  const [showEditConfirmationModal, setShowEditConfirmationModal] =
+    useState(false);
+  const handleCloseEditConfirmationModal = () =>
+    setShowEditConfirmationModal(false);
+  const handleShowEditConfirmationModal = () =>
+    setShowEditConfirmationModal(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleCloseDeleteModal = () => setShowDeleteModal(false);
+  const handleShowDeleteModal = () => setShowDeleteModal(true);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await UserService.getUserById(userData.id);
+      const { data } = await response.data;
+      setThisUser(data);
+      setRut(data.rut);
+      setFirstNames(data.names);
+      setFirstLastName(data.first_lastname);
+      setSecondLastName(data.second_lastname);
+      setEmail(data.email);
+      setCellphone(data.phone_number);
+      setAddress(data.adress);
+      dispatch(loadingActions.setLoading(false));
+    } catch (e) {
+      dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+      setTimeout(() => {
+        setAlertContent("");
+      }, 5000);
+    }
+  };
 
   useEffect(() => {
-    dispatch(loadingActions.setLoading(false));
+    dispatch(loadingActions.setLoading(true));
+    getUserInfo();
   }, []);
 
   const validateCamps = (e) => {
@@ -46,33 +82,21 @@ const MyProfile = () => {
     } else if (e === cellphone) {
       //Sólo 9 numeros
       validator = /^[0-9]{9}$/;
-    } else if (e === password) {
-      //Entre 6 y 8 caracteres, combinar números, letras y carácteres especiales (.!$#@%).
-      validator =
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!.%#]{6,8}$/;
     } else {
       return null;
     }
     return validator.test(e);
   };
 
-  const validatePasswordReenter = (e) => {
-    if (e === password) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   useEffect(() => {
-    if (id !== "") {
-      id.length < 8
-        ? setIdError("El rut no es válido, intenta nuevamente.")
-        : validate(id)
-        ? setIdError("")
-        : setIdError("El rut no es válido, intenta nuevamente.");
+    if (rut !== "") {
+      rut.length < 8
+        ? setRutError("El rut no es válido, intenta nuevamente.")
+        : validate(rut)
+        ? setRutError("")
+        : setRutError("El rut no es válido, intenta nuevamente.");
     } else {
-      setIdError("");
+      setRutError("");
     }
     if (firstNames !== "") {
       validateCamps(firstNames)
@@ -115,35 +139,25 @@ const MyProfile = () => {
     } else {
       setCellphoneError("");
     }
-    if (password !== "") {
-      validateCamps(password)
-        ? setPasswordError("")
-        : setPasswordError("El formato no es valido, intenta nuevamente.");
-    } else {
-      setPasswordError("");
-    }
-    if (passwordReenter !== "") {
-      validatePasswordReenter(passwordReenter)
-        ? setPasswordReenterError("")
-        : setPasswordReenterError("Debes poner la misma contraseña.");
-    } else {
-      setPasswordReenterError("");
-    }
-  }, [
-    id,
-    firstNames,
-    firstLastName,
-    secondLastName,
-    cellphone,
-    email,
-    password,
-    passwordReenter,
-  ]);
+  }, [rut, firstNames, firstLastName, secondLastName, cellphone, email]);
 
   useEffect(() => {
+    let thereIsChanges = false;
     if (
-      id !== "" &&
-      idError === "" &&
+      format(rut, { dots: false }) !== format(thisUser.rut, { dots: false }) ||
+      firstNames !== thisUser.names ||
+      firstLastName !== thisUser.first_lastname ||
+      secondLastName !== thisUser.second_lastname ||
+      cellphone !== thisUser.phone_number ||
+      email !== thisUser.email ||
+      address !== thisUser.adress
+    ) {
+      thereIsChanges = true;
+    }
+    if (
+      thereIsChanges &&
+      rut !== "" &&
+      rutError === "" &&
       firstNames !== "" &&
       firstNamesError === "" &&
       firstLastName !== "" &&
@@ -153,19 +167,15 @@ const MyProfile = () => {
       cellphoneError === "" &&
       email !== "" &&
       emailError === "" &&
-      address !== "" &&
-      password !== "" &&
-      passwordError === "" &&
-      passwordReenter !== "" &&
-      passwordReenterError === ""
+      address !== ""
     ) {
-      setDisabledButton(false);
+      setDisabledSaveButton(false);
     } else {
-      setDisabledButton(true);
+      setDisabledSaveButton(true);
     }
   }, [
-    id,
-    idError,
+    rut,
+    rutError,
     firstNames,
     firstNamesError,
     firstLastName,
@@ -176,40 +186,67 @@ const MyProfile = () => {
     email,
     emailError,
     address,
-    password,
-    passwordError,
-    passwordReenter,
-    passwordReenterError,
   ]);
 
-  const handleRegister = async (e) => {
-    // e.preventDefault();
-    // dispatch(loadingActions.setLoading(true));
-    // try {
-    //   const registerData = {
-    //     userTypeId: 2,
-    //     names: firstNames,
-    //     firstLastName,
-    //     secondLastName,
-    //     rut: format(id, { dots: false }),
-    //     adress: address,
-    //     phoneNumber: cellphone,
-    //     email,
-    //     password,
-    //   };
-    //   const response = await UserService.createUser(registerData);
-    //   if (response.data.ok) navigate("/login");
-    // } catch (e) {
-    //   dispatch(loadingActions.setLoading(false));
-    //   if (!e.data.error) {
-    //     setAlertContent("No se pudo establecer conexión con el servidor.");
-    //   } else {
-    //     setAlertContent(e.data.error);
-    //   }
-    //   setTimeout(() => {
-    //     setAlertContent("");
-    //   }, 5000);
-    // }
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    dispatch(loadingActions.setLoading(true));
+    try {
+      const editData = {
+        userTypeId: thisUser.user_type_id,
+        names: firstNames,
+        firstLastName,
+        secondLastName,
+        rut: format(rut, { dots: false }),
+        adress: address,
+        phoneNumber: cellphone,
+        email,
+      };
+      const response = await UserService.editUser(userData.id, editData);
+      if (response.data.ok) {
+        getUserInfo();
+        handleShowEditConfirmationModal();
+      }
+    } catch (e) {
+      dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+      setTimeout(() => {
+        setAlertContent("");
+      }, 5000);
+    }
+  };
+
+  const handleExitOnEdit = () => {
+    handleCloseEditConfirmationModal();
+    getUserInfo();
+  };
+
+  const handleDelete = async () => {
+    handleCloseDeleteModal();
+    dispatch(loadingActions.setLoading(true));
+    try {
+      const deleteUserResponse = await UserService.deleteUser(userData.id);
+      if (deleteUserResponse.data.ok) {
+        dispatch(loginActions.logout());
+        dispatch(userPhotosActions.setUserPhotos([]));
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    } catch (e) {
+      dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+      setTimeout(() => {
+        setAlertContent("");
+      }, 5000);
+    }
   };
 
   return (
@@ -221,6 +258,36 @@ const MyProfile = () => {
       )}
       <h2 className="my-5">Mi perfil</h2>
       <CustomFormContainer className="mb-5">
+        <Modal
+          show={showEditConfirmationModal}
+          onHide={handleCloseEditConfirmationModal}
+        >
+          <Modal.Body>Datos modificados con éxito</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleExitOnEdit}>
+              Aceptar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmación</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            ¿Estás seguro/a de que quieres eliminar esta cuenta? Se borrarán de
+            nuestros registros todos tus datos y capturas.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleDelete}>
+              Sí, eliminar
+            </Button>
+            <Button variant="danger" onClick={handleCloseDeleteModal}>
+              Cancelar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Form className="d-flex flex-column align-items-center">
           <h3>Datos personales</h3>
           <div className="inputs-container d-flex gap-3 flex-wrap justify-content-between">
@@ -228,9 +295,9 @@ const MyProfile = () => {
               <Form.Label>Rut</Form.Label>
               <CustomInput
                 type="text"
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-                errorText={idError}
+                value={rut}
+                onChange={(e) => setRut(e.target.value)}
+                errorText={rutError}
               />
             </Form.Group>
             <Form.Group>
@@ -287,15 +354,19 @@ const MyProfile = () => {
               />
             </Form.Group>
           </div>
-
-          <Button
-            variant="secondary mt-4"
-            type="submit"
-            disabled={disabledButton}
-            onClick={handleRegister}
-          >
-            Registrarse
-          </Button>
+          <div className="d-flex align-items-center gap-5">
+            <Button
+              variant="secondary mt-4"
+              type="submit"
+              disabled={disabledSaveButton}
+              onClick={handleEdit}
+            >
+              Guardar cambios
+            </Button>
+            <Button variant="secondary mt-4" onClick={handleShowDeleteModal}>
+              Eliminar cuenta
+            </Button>
+          </div>
         </Form>
       </CustomFormContainer>
     </div>

@@ -102,7 +102,7 @@ const UserHome = () => {
                 )}
               </div>
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
-                <h4>Avistamiento más reciente</h4>
+                <h4>Captura más reciente</h4>
                 {userPhotos.length === 0 ? (
                   <h3>No aplica</h3>
                 ) : (

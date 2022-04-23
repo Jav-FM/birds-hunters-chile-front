@@ -3,22 +3,64 @@ import "./MyCapturesDetail.scss";
 import { LoadingScreen } from "../../../components/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingActions } from "../../../store/loading";
-import { birdsActions } from "../../../store/birds";
-import { Button } from "react-bootstrap";
+import { userPhotosActions } from "../../../store/userPhotos";
+import { Button, Alert, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import PhotosService from "../../../request/services/PhotosService";
 
 const MyCapturesDetail = () => {
   const loading = useSelector((state) => state.loading.loading);
+  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
+  const { userData } = useSelector((state) => state.login);
   const { id } = useParams();
   const navigate = useNavigate();
-  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
+  const dispatch = useDispatch();
   const [bird, setBird] = useState(null);
+  const [alertContent, setAlertContent] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleCloseDeleteModal = () => setShowDeleteModal(false);
+  const handleShowDeleteModal = () => setShowDeleteModal(true);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const handleCloseConfirmationModal = () => setShowConfirmationModal(false);
+  const handleShowConfirmationModal = () => setShowConfirmationModal(true);
 
   useEffect(() => {
     const thisBird = userPhotos.filter((photo) => photo.id === Number(id));
     if (thisBird.length > 0) setBird(thisBird[0]);
   }, [id, userPhotos]);
+
+  const handleDelete = async () => {
+    handleCloseDeleteModal()
+    dispatch(loadingActions.setLoading(true));
+    try {
+      const createPhotoResponse = await PhotosService.deletePhoto(bird.id);
+      if (createPhotoResponse.data.ok) {
+        const getPhotosResponse = await PhotosService.getPhotoByUser(
+          userData.id
+        );
+        const { data } = await getPhotosResponse.data;
+        dispatch(userPhotosActions.setUserPhotos(data));
+        dispatch(loadingActions.setLoading(false));
+        handleShowConfirmationModal();
+      }
+    } catch (e) {
+      dispatch(loadingActions.setLoading(false));
+      if (!e.data.error) {
+        setAlertContent("No se pudo establecer conexión con el servidor.");
+      } else {
+        setAlertContent(e.data.error);
+      }
+      setTimeout(() => {
+        setAlertContent("");
+      }, 5000);
+    }
+  };
+
+  const handleExitOnDelete = () => {
+    handleCloseConfirmationModal()
+    navigate("/mycaptures");
+  }
 
   return (
     <React.Fragment>
@@ -36,7 +78,37 @@ const MyCapturesDetail = () => {
           id="mycapturesdetail"
           className="d-flex flex-column align-items-center"
         >
-          <div className="container d-flex mt-5 mb-2 align-items-center justify-content-between px-4" >
+          {alertContent !== "" && (
+            <Alert variant="danger" className="mt-2 mb-0">
+              {alertContent}
+            </Alert>
+          )}
+
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>¿Estás seguro/a de que quieres eliminar esta captura?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleDelete}>
+            Sí, eliminar
+          </Button>
+          <Button variant="danger" onClick={handleCloseDeleteModal}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showConfirmationModal} onHide={handleCloseConfirmationModal}>
+        <Modal.Body>Captura eliminada con éxito</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleExitOnDelete}>
+            Aceptar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+          <div className="container d-flex mt-5 mb-2 align-items-center justify-content-between px-4">
             <div
               id="mycapturesdetail-header"
               className="d-flex  align-items-center gap-2"
@@ -46,7 +118,10 @@ const MyCapturesDetail = () => {
               </h1>
               <h2>{bird.name}</h2>
             </div>
-            <Button id="see-avepedia-button" onClick={() => navigate(`/avepedia/${bird.bird_id}`)}>
+            <Button
+              id="see-avepedia-button"
+              onClick={() => navigate(`/avepedia/${bird.bird_id}`)}
+            >
               Ver en Avepedia
             </Button>
           </div>
@@ -72,10 +147,20 @@ const MyCapturesDetail = () => {
                 <b>Orden taxonomico:</b> {bird.order}
               </p>
               <div id="buttons-container" className="d-flex gap-3">
-                <Button className="photo-button" variant="secondary" onClick={() => navigate(`/editcapture/${bird.bird_id}/${bird.id}`)}>
+                <Button
+                  className="photo-button"
+                  variant="secondary"
+                  onClick={() =>
+                    navigate(`/editcapture/${bird.bird_id}/${bird.id}`)
+                  }
+                >
                   Reemplazar
                 </Button>
-                <Button className="photo-button" variant="secondary" onClick={() => {}}>
+                <Button
+                  className="photo-button"
+                  variant="secondary"
+                  onClick={handleShowDeleteModal}
+                >
                   Eliminar
                 </Button>
               </div>

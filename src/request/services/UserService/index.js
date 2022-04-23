@@ -25,9 +25,9 @@ const getUserById = (id) => {
   });
 };
 
-const editUser = (data) => {
+const editUser = (id, data) => {
   return request({
-    url: `${BASE_URL}/users`,
+    url: `${BASE_URL}/users/${id}`,
     method: "PUT",
     data,
     private: true,

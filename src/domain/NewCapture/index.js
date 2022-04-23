@@ -93,7 +93,6 @@ const NewCapture = () => {
         navigate("/mycaptures");
       }
     } catch (e) {
-      dispatch(loadingActions.setLoading(false));
       if (!e.data.error) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
