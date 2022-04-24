@@ -9,8 +9,8 @@ import App from "./router/App";
 import { PersistGate } from "redux-persist/integration/react";
 
 const container = document.getElementById("root");
-
 const root = ReactDOMClient.createRoot(container);
+let persistor = persistStore(store);
 
 root.render(
   <BrowserRouter>

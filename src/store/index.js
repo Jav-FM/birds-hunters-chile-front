@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from 'redux-persist/lib/storage';
 import { loginSlice } from "./login";
 import { birdsSlice } from "./birds";
 import { loadingSlice } from "./loading";
@@ -20,10 +20,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, reducers);
 
-export default () => {
-  const store = configureStore({
-    reducer: persistedReducer,
-  });
-  const persistor = persistStore(store);
-  return { store, persistor };
-};
+const store = configureStore({
+  reducer: persistedReducer,
+});
+
+export default store;
+
