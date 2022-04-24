@@ -13,6 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     if (birds.length === 0) {
+      console.log("aqui")
       dispatch(loadingActions.setLoading(true));
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
@@ -31,9 +32,10 @@ const Home = () => {
 
           dispatch(loadingActions.setLoading(false));
         });
+    } else {
+      dispatch(loadingActions.setLoading(false));
     }
-    dispatch(loadingActions.setLoading(false));
-  }, []);
+  }, [loading]);
 
   return (
     <React.Fragment>

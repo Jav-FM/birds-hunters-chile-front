@@ -59,7 +59,7 @@ const MyCaptures = () => {
           ) : (
             <React.Fragment>
               <h4 className="mt-4 mb-4">Aún no tienes capturas registradas</h4>
-              <Button onClick={() => navigate('/newcapture')}>Registrar nueva captura</Button>
+              <Button onClick={() => navigate('/newcapture')}>Registra tu primera captura</Button>
             </React.Fragment>
           )}
         </div>

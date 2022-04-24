@@ -79,7 +79,7 @@ const AvepediaDetail = () => {
                     className="mx-2"
                     onClick={() => navigate(`/newcapture/${id}`)}
                   >
-                    Subir captura
+                    Registrar captura
                   </Button>
                 </div>
               )}
