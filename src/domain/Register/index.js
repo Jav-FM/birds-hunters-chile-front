@@ -201,8 +201,13 @@ const Register = () => {
       if (response.data.ok) navigate("/login");
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
-        setAlertContent("No se pudo establecer conexión con el servidor.");
+      if (!e.data) {
+        setAlertContent(
+          "No se pudo establecer conexión con el servidor. Error:",
+          e
+        );
+      } else if (!e.data.error) {
+        setAlertContent(e.data);
       } else {
         setAlertContent(e.data.error);
       }
