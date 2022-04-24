@@ -30,7 +30,7 @@ const UserHome = () => {
         dispatch(loadingActions.setLoading(false));
         if (!e.data) {
           setAlertContent("No se pudo establecer conexión con el servidor.");
-        } else {
+        } else  if (!e.data.error) { setAlertContent(e.data); console.log(e.data) } else {
           setAlertContent(e.data.error);
         }
         setTimeout(() => {
