@@ -94,8 +94,8 @@ const Login = () => {
       const data = await response.data;
       localStorage.setItem("token", data.token);
       const info = jwt_decode(data.token);
-      dispatch(loginActions.login(info));
-      navigate("/");
+      dispatch(loginActions.login(info))
+      .then(() => {navigate("/")});
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
       if (!e.data.error) {
