@@ -28,7 +28,7 @@ const UserHome = () => {
         dispatch(userPhotosActions.setUserPhotos(data));
       } catch (e) {
         dispatch(loadingActions.setLoading(false));
-        if (!e.data.error) {
+        if (!e.data) {
           setAlertContent("No se pudo establecer conexión con el servidor.");
         } else {
           setAlertContent(e.data.error);

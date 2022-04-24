@@ -203,8 +203,7 @@ const Register = () => {
       dispatch(loadingActions.setLoading(false));
       if (!e.data) {
         setAlertContent(
-          "No se pudo establecer conexión con el servidor. Error:",
-          e
+          "No se pudo establecer conexión con el servidor."
         );
       } else if (!e.data.error) {
         setAlertContent(e.data);

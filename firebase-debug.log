@@ -1,0 +1,13 @@
+[debug] [2022-04-24T22:23:46.385Z] ----------------------------------------------------------------------
+[debug] [2022-04-24T22:23:46.386Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2022-04-24T22:23:46.386Z] CLI Version:   10.7.1
+[debug] [2022-04-24T22:23:46.386Z] Platform:      win32
+[debug] [2022-04-24T22:23:46.387Z] Node Version:  v16.14.2
+[debug] [2022-04-24T22:23:46.387Z] Time:          Sun Apr 24 2022 18:23:46 GMT-0400 (Chile Standard Time)
+[debug] [2022-04-24T22:23:46.387Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-04-24T22:23:46.434Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-04-24T22:23:46.435Z] > authorizing via signed-in user (javiera.fortunato@gmail.com)
+[debug] [2022-04-24T22:23:46.435Z] [iam] checking project birdshunters-chile for permissions ["firebase.projects.get"]
+[debug] [2022-04-24T22:23:46.437Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/birdshunters-chile:testIamPermissions [none]
+[debug] [2022-04-24T22:23:46.437Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/birdshunters-chile:testIamPermissions {"permissions":["firebase.projects.get"]}
