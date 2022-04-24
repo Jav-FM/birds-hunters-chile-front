@@ -131,7 +131,7 @@ const MyCapturesDetail = () => {
               className=" d-flex align-items-center justify-content-center"
             >
               <img
-                src={`http://localhost:8080/birdsphotos/${bird.photo}`}
+                src={`https://birdshunters-chile-server.herokuapp.com/birdsphotos/${bird.photo}`}
                 alt={bird.name}
                 style={{ maxHeight: "450px", maxWidth: "450px" }}
               />

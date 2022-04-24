@@ -176,7 +176,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
                     >
                       <Card.Img
                         variant="top"
-                        src={`http://localhost:8080/birdsphotos/${item.photo}`}
+                        src={`https://birdshunters-chile-server.herokuapp.com/birdsphotos/${item.photo}`}
                       />
 
                       <Card.Body className="pb-2 d-flex justify-content-center align-items-end">

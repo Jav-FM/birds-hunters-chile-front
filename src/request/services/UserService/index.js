@@ -1,5 +1,5 @@
 import request from "../../index";
-const BASE_URL = "http://localhost:8080/api/v1";
+const BASE_URL = "https://birdshunters-chile-server.herokuapp.com/api/v1";
 
 const loginUser = (data) => {
   return request({
