@@ -11,6 +11,7 @@ const Avepedia = () => {
   const loading = useSelector((state) => state.loading.loading);
   const dispatch = useDispatch();
 
+  //Si aves no estan guardadas en redux, se consulta API
   useEffect(() => {
     if (birds.length === 0) {
       dispatch(loadingActions.setLoading(true));

@@ -10,7 +10,7 @@ import { MyCaptures } from "../domain/MyCaptures";
 import { MyCapturesDetail } from "../domain/MyCaptures/MyCapturesDetail";
 import { NewCapture } from "../domain/NewCapture";
 import { EditCapture } from "../domain/EditCapture";
-import {MyProfile} from "../domain/MyProfile"
+import { MyProfile } from "../domain/MyProfile";
 import { CustomNavbar } from "../components/CustomNavbar";
 import { CustomFooter } from "../components/CustomFooter";
 import { CustomSidebar } from "../components/CustomSidebar";
@@ -27,15 +27,17 @@ function App() {
   const navigate = useNavigate();
   const [mainPadding, setMainPadding] = useState("0");
 
+  //Inicialización de app para deploy en Firebase
   initializeApp({
     apiKey: "AIzaSyAvEvlr_1VViXYfmSus3DZp9bOHVcUtF4M",
     authDomain: "birdshunters-chile.firebaseapp.com",
     projectId: "birdshunters-chile",
     storageBucket: "birdshunters-chile.appspot.com",
     messagingSenderId: "847126193909",
-    appId: "1:847126193909:web:5c1974dad17d765b8e87bc"
+    appId: "1:847126193909:web:5c1974dad17d765b8e87bc",
   });
 
+  //Validación continua de token, en caso de estar vencido se elimina de localStorage y se "vacía" redux
   useEffect(() => {
     if (!isLoginTokenValid()) {
       dispatch(loadingActions.setLoading(true));
@@ -46,6 +48,7 @@ function App() {
     }
   }, []); // eslint-disable-line
 
+  //Ajuste en padding del body en caso de que el usuario esté logueado (por sidebar)
   useEffect(() => {
     if (loginState) {
       setMainPadding("200px");
@@ -54,6 +57,7 @@ function App() {
     }
   }, [loginState]);
 
+  //Devuelvo las rutas según el estado de login y la validación de token
   return (
     <div className="App">
       <CustomNavbar />
@@ -81,11 +85,17 @@ function App() {
                 <Route path="/avepedia" element={<Avepedia />} />
                 <Route path="/avepedia/:id" element={<AvepediaDetail />} />
                 <Route path="/mycaptures" element={<MyCaptures />} />
-                <Route path="/mycapturesdetail/:id" element={<MyCapturesDetail />} />
-                {["/newcapture", "/newcapture/:bird_id"].map((page) => (
-                  <Route path={page} element={<NewCapture />} />
+                <Route
+                  path="/mycapturesdetail/:id"
+                  element={<MyCapturesDetail />}
+                />
+                {["/newcapture", "/newcapture/:bird_id"].map((page, i) => (
+                  <Route path={page} element={<NewCapture />} key={i} />
                 ))}
-                <Route path="/editcapture/:bird_id/:capture_id" element={<EditCapture />} />
+                <Route
+                  path="/editcapture/:bird_id/:capture_id"
+                  element={<EditCapture />}
+                />
                 <Route path="/myprofile" element={<MyProfile />} />
                 <Route path="*" element={<UserHome />} />
               </React.Fragment>

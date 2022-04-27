@@ -1,9 +1,8 @@
 import axios from "axios";
-/**
- * Create an Axios Client with defaults
- */
+
+//Creo una conexión de cliente a axios
 const client = axios.create();
-// Manejo de códigos de error del backend.
+// Manejo de códigos de error del backend
 client.interceptors.response.use(
   (response) => {
     if (response.config.responseType === "blob") {
@@ -16,9 +15,8 @@ client.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-/**
- * Request Wrapper with default success/error actions
- */
+
+//request con formato de token (si aplica) y casps de éxito y error
 const request = (options) => {
   if (options.private) {
     client.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem(

@@ -25,11 +25,13 @@ const MyCapturesDetail = () => {
   const handleCloseConfirmationModal = () => setShowConfirmationModal(false);
   const handleShowConfirmationModal = () => setShowConfirmationModal(true);
 
+  //Traigo los datos del ave desde las fotos del usuario guardadas en redux
   useEffect(() => {
     const thisBird = userPhotos.filter((photo) => photo.id === Number(id));
     if (thisBird.length > 0) setBird(thisBird[0]);
   }, [id, userPhotos]);
 
+  //Función para eliminar captura
   const handleDelete = async () => {
     handleCloseDeleteModal()
     dispatch(loadingActions.setLoading(true));
@@ -46,7 +48,7 @@ const MyCapturesDetail = () => {
       }
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);
@@ -57,6 +59,7 @@ const MyCapturesDetail = () => {
     }
   };
 
+  //Función ejecutada al aceptar el éxito de la captura en el modal
   const handleExitOnDelete = () => {
     handleCloseConfirmationModal()
     navigate("/mycaptures");

@@ -20,7 +20,9 @@ const CaptureForm = ({
 }) => {
   const [disabledButton, setDisabledButton] = useState(true);
   const birds = useSelector((state) => state.birds.birds);
+  const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
 
+  // habilitar botón
   useEffect(() => {
     if (selectedSpecies !== "" && date !== "" && place !== "" && file !== "") {
       setDisabledButton(false);
@@ -67,11 +69,17 @@ const CaptureForm = ({
             <option key={0} value={""}>
               Seleccionar
             </option>
-            {birds.map((b, i) => (
-              <option key={i + 1} value={b.uid}>
-                {b.name.spanish}
-              </option>
-            ))}
+            {birds.map((b, i) => {
+              if (userPhotos.filter(p => p.bird_id === b.uid).length > 0) {
+                return null;
+              } else {
+                return (
+                  <option key={i + 1} value={b.uid}>
+                    {b.name.spanish}
+                  </option>
+                );
+              }
+            })}
           </Form.Control>
         </Form.Group>
 

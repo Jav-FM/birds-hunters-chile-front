@@ -1,6 +1,7 @@
 import request from "../../index";
 const BASE_URL = "https://birdshunters-chile-server.herokuapp.com/api/v1";
 
+//Función para login de usuario
 const loginUser = (data) => {
   return request({
     url: `${BASE_URL}/login`,
@@ -9,6 +10,7 @@ const loginUser = (data) => {
   });
 };
 
+//Función para crear usuario
 const createUser = (data) => {
   return request({
     url: `${BASE_URL}/users`,
@@ -17,6 +19,7 @@ const createUser = (data) => {
   });
 };
 
+//Función para traer datos del usuario por su ID
 const getUserById = (id) => {
   return request({
     url: `${BASE_URL}/users/${id}`,
@@ -25,6 +28,7 @@ const getUserById = (id) => {
   });
 };
 
+//Función para editar datos de usuario
 const editUser = (id, data) => {
   return request({
     url: `${BASE_URL}/users/${id}`,
@@ -34,6 +38,7 @@ const editUser = (id, data) => {
   });
 };
 
+//Función para eliminar usuario
 const deleteUser = (id) => {
   return request({
     url: `${BASE_URL}/users/${id}`,
@@ -42,6 +47,7 @@ const deleteUser = (id) => {
   });
 };
 
+//Objeto con todas las funciones para ser exportadas
 const UserService = {
   loginUser,
   createUser,

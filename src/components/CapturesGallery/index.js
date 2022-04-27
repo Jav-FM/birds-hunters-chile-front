@@ -23,6 +23,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     setOrdersForSelector(result);
   }, [userPhotos]);
 
+  //reducer de paginador
   const reducer = (state, action) => {
     switch (action.type) {
       case "setData":
@@ -40,6 +41,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     }
   };
 
+  //estado inicial de paginador
   const initialState = {
     data: userPhotos,
     offset: 0,
@@ -50,6 +52,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //aplicación de filtros por nombre y por orden taxonómico
   useEffect(() => {
     if (nameFilter !== "" && filteredOrder === "") {
       const filteredPhotosByName = userPhotos.filter((b) =>
@@ -74,6 +77,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     }
   }, [nameFilter, filteredOrder, userPhotos]);
 
+  //Dispatch de paginador
   useEffect(() => {
     dispatch({
       type: "setCurrentData",
@@ -84,6 +88,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     });
   }, [state.numberPerPage, state.offset, state.data, nameFilter, userPhotos]);
 
+  //manejo de clics en paginador
   const handlePaginationClick = (e) => {
     const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
     dispatch({
@@ -100,6 +105,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     });
   };
 
+  //Definicion de paginas en paginador
   const paginationItems = [];
   const amountPages = state.data.length / state.numberPerPage;
   for (let number = 1; number <= amountPages; number++) {
@@ -114,7 +120,8 @@ const CapturesGallery = ({ ...restOfProps }) => {
     );
   }
 
-  const handleChange = (e) => {
+  //manejo de cambio en input para filtro de nombres
+  const handleChangeInpur = (e) => {
     e.preventDefault(); // prevent the default action
     setNameFilter(e.target.value); // set name to e.target.value (event)
   };
@@ -154,7 +161,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
                 style={{ width: "0px" }}
                 type="text"
                 value={nameFilter}
-                onChange={handleChange}
+                onChange={handleChangeInpur}
               />
             </InputGroup>
           </div>
@@ -187,7 +194,11 @@ const CapturesGallery = ({ ...restOfProps }) => {
                 ))}
             </div>
 
-            <Pagination className="mb-5" id="pagination" onClick={handlePaginationClick}>
+            <Pagination
+              className="mb-5"
+              id="pagination"
+              onClick={handlePaginationClick}
+            >
               {paginationItems}
             </Pagination>
           </div>

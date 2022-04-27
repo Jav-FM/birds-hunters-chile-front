@@ -7,6 +7,7 @@ const LoadingScreen = ({ ...restOfProps }) => {
   const { loginState } = useSelector((state) => state.login);
   const [spinnerPadding, setSpinnerPadding] = useState("0")
 
+  //Definir padding según estado de login (por sidebar)
   useEffect(() => {
     if(loginState){ setSpinnerPadding("200px") } else {setSpinnerPadding("0")}
   }, [loginState])

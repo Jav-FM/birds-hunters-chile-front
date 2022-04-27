@@ -27,7 +27,9 @@ const NewCapture = () => {
   const [birdOrder, setBirdOrder] = useState("");
   const [alertContent, setAlertContent] = useState("");
 
+  //Vacío los campos y, de existir, coloco la especie en el selector correspondiente
   useEffect(() => {
+    dispatch(loadingActions.setLoading(true));
     setSelectedSpecies(params.bird_id ? params.bird_id : "");
     setDate("");
     setPlace("");
@@ -55,10 +57,11 @@ const NewCapture = () => {
           setBirdName(json.name.spanish);
         });
     }
+    dispatch(loadingActions.setLoading(false));
   }, []);
 
+  //Manejo de selección de especie
   const handleSelectBird = (e) => {
-    console.log(e.target.value);
     setSelectedSpecies(e.target.value);
     fetch(`https://aves.ninjas.cl/api/birds/${e.target.value}`)
       .then((response) => response.json())
@@ -68,20 +71,21 @@ const NewCapture = () => {
       });
   };
 
+  //Manejo de selección de archivos, previsualización y obtención de URL
   const handleSetFile = (e) => {
     setFile(e.target.value);
     setSrc(URL.createObjectURL(e.target.files[0]));
   };
 
+  //Función que ejecuta el registro de la nueva captura
   const handleRegister = async (e) => {
     e.preventDefault();
+    dispatch(loadingActions.setLoading(true));
     const form = new FormData(e.target);
     form.append("user_id", userData.id);
     form.append("order", birdOrder);
     form.append("name", birdName);
     console.log(Object.fromEntries(form));
-    // fetch("tu-ruta", {method:¨:¨post, body:¨form})
-
     try {
       const createPhotoResponse = await PhotosService.createPhoto(form);
       if (createPhotoResponse.data.ok) {
@@ -93,11 +97,12 @@ const NewCapture = () => {
         navigate("/mycaptures");
       }
     } catch (e) {
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);
       }
+      dispatch(loadingActions.setLoading(false));
       setTimeout(() => {
         setAlertContent("");
       }, 5000);

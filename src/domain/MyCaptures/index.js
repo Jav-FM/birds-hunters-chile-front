@@ -17,6 +17,7 @@ const MyCaptures = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  //Traigo las fotos actualizadas del usuario
   useEffect(() => {
     const getUserPhotos = async () => {
       try {
@@ -25,7 +26,7 @@ const MyCaptures = () => {
         dispatch(userPhotosActions.setUserPhotos(data));
       } catch (e) {
         dispatch(loadingActions.setLoading(false));
-        if (!e.data.error) {
+        if (!e.data) {
           setAlertContent("No se pudo establecer conexión con el servidor.");
         } else {
           setAlertContent(e.data.error);
@@ -59,7 +60,9 @@ const MyCaptures = () => {
           ) : (
             <React.Fragment>
               <h4 className="mt-4 mb-4">Aún no tienes capturas registradas</h4>
-              <Button onClick={() => navigate('/newcapture')}>Registra tu primera captura</Button>
+              <Button onClick={() => navigate("/newcapture")}>
+                Registra tu primera captura
+              </Button>
             </React.Fragment>
           )}
         </div>

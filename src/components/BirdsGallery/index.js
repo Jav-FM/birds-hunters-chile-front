@@ -17,6 +17,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useState("");
 
+  //reducer de paginador
   const reducer = (state, action) => {
     switch (action.type) {
       case "setData":
@@ -34,6 +35,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     }
   };
 
+  //initialState para el paginador
   const initialState = {
     data: birds,
     offset: 0,
@@ -44,6 +46,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //aplicar filtro de nombre
   useEffect(() => {
     if (nameFilter !== "") {
       const filteredBirds = birds.filter((b) =>
@@ -55,6 +58,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     }
   }, [nameFilter, birds]);
 
+  // dispatch para paginador
   useEffect(() => {
     dispatch({
       type: "setCurrentData",
@@ -65,6 +69,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     });
   }, [state.numberPerPage, state.offset, state.data, nameFilter, birds]);
 
+  // función para manejo de clics en paginador
   const handlePaginationClick = (e) => {
     const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
     dispatch({
@@ -81,6 +86,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     });
   };
 
+  //definición de páginas en paginador
   const paginationItems = [];
   const amountPages = state.data.length / state.numberPerPage;
   for (let number = 1; number <= amountPages; number++) {
@@ -95,7 +101,8 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     );
   }
 
-  const handleChange = (e) => {
+  //manejo de cambios en inputs
+  const handleChangeInput = (e) => {
     e.preventDefault(); 
     setNameFilter(e.target.value); 
   };
@@ -113,7 +120,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
                 style={{ width: "0px" }}
                 type="text"
                 value={nameFilter}
-                onChange={handleChange}
+                onChange={handleChangeInput}
               />
             </InputGroup>
           </div>

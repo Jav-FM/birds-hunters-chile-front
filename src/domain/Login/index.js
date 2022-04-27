@@ -25,6 +25,7 @@ const Login = () => {
   const [alertContent, setAlertContent] = useState("");
   const navigate = useNavigate();
 
+  //Si no tengo aves en redux las traigo, y con ellas defino una random para mostrarla en la vista
   useEffect(() => {
     dispatch(loadingActions.setLoading(true));
     if (birds.length === 0) {
@@ -44,26 +45,13 @@ const Login = () => {
     }
   }, []);
 
-  useEffect(() => {
-    dispatch(loadingActions.setLoading(true));
-    if (birds.length === 0) {
-      fetch("https://aves.ninjas.cl/api/birds")
-        .then((response) => response.json())
-        .then((json) => {
-          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
-          dispatch(birdsActions.setBirds(orderedBirds));
-        });
-    }
-    const newRandomBird = birds[Math.floor(Math.random() * birds.length)];
-    setRandomBird(newRandomBird);
-    dispatch(loadingActions.setLoading(false));
-  }, []);
-
+  //Validador de formato de correo
   const validateEmail = (e) => {
     let validator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return validator.test(e);
   };
 
+  //Aplico validador de correo
   useEffect(() => {
     if (email !== "") {
       validateEmail(email)
@@ -74,6 +62,7 @@ const Login = () => {
     }
   }, [email]);
 
+  //Habilito botón si corresponde
   useEffect(() => {
     if (email !== "" && password !== "" && emailError === "") {
       setDisabledButton(false);
@@ -82,6 +71,7 @@ const Login = () => {
     }
   }, [email, password, emailError]);
 
+  //Función para ejecutar proceso de login, guardar token en localStorage y guardar data de usuario en redux
   const handleLogin = async (e) => {
     e.preventDefault();
     dispatch(loadingActions.setLoading(true));
@@ -98,7 +88,7 @@ const Login = () => {
       navigate("/");
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);

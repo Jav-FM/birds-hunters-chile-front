@@ -11,7 +11,7 @@ const parseJwt = (token) => {
   }
 };
 
-//Corroborar que token continúa siendo válido
+//Corroborar que token continúa siendo válido (usa función anterior)
 const isTokenValid = (token) => {
   const data = parseJwt(token);
 

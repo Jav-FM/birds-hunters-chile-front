@@ -20,6 +20,7 @@ const AvepediaDetail = () => {
   const loading = useSelector((state) => state.loading.loading);
   const dispatch = useDispatch();
 
+  //Se trae información de ave desde la API
   useEffect(() => {
     dispatch(loadingActions.setLoading(true));
     fetch(`https://aves.ninjas.cl/api/birds/${id}`)

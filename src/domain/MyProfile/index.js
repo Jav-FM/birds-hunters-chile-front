@@ -41,6 +41,7 @@ const MyProfile = () => {
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
   const handleShowDeleteModal = () => setShowDeleteModal(true);
 
+  //Traigo y pongo en inputs la información editable del usuario
   const getUserInfo = async () => {
     try {
       const response = await UserService.getUserById(userData.id);
@@ -56,7 +57,7 @@ const MyProfile = () => {
       dispatch(loadingActions.setLoading(false));
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);
@@ -66,12 +67,12 @@ const MyProfile = () => {
       }, 5000);
     }
   };
-
   useEffect(() => {
     dispatch(loadingActions.setLoading(true));
     getUserInfo();
   }, []);
 
+  //Validador de formato en base al campo
   const validateCamps = (e) => {
     let validator;
     if (e === firstNames || e === firstLastName || e === secondLastName) {
@@ -88,6 +89,7 @@ const MyProfile = () => {
     return validator.test(e);
   };
 
+  //Ejecuto la validación de campos
   useEffect(() => {
     if (rut !== "") {
       rut.length < 8
@@ -141,6 +143,7 @@ const MyProfile = () => {
     }
   }, [rut, firstNames, firstLastName, secondLastName, cellphone, email]);
 
+  //Habilito el botón si corresponde
   useEffect(() => {
     let thereIsChanges = false;
     if (
@@ -188,6 +191,7 @@ const MyProfile = () => {
     address,
   ]);
 
+  //Función que ejecuta la edición a través del servidor
   const handleEdit = async (e) => {
     e.preventDefault();
     dispatch(loadingActions.setLoading(true));
@@ -209,7 +213,7 @@ const MyProfile = () => {
       }
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);
@@ -220,11 +224,13 @@ const MyProfile = () => {
     }
   };
 
-  const handleExitOnEdit = () => {
+  //Función que se ejecuta al aceptar el mensaje de éxito de edición
+  const handleSuccessOnEdit = () => {
     handleCloseEditConfirmationModal();
     getUserInfo();
   };
 
+  //Función que ejecuta la eliminación del usuario a través del servidor
   const handleDelete = async () => {
     handleCloseDeleteModal();
     dispatch(loadingActions.setLoading(true));
@@ -238,7 +244,7 @@ const MyProfile = () => {
       }
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);
@@ -264,7 +270,7 @@ const MyProfile = () => {
         >
           <Modal.Body>Datos modificados con éxito</Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleExitOnEdit}>
+            <Button variant="primary" onClick={handleSuccessOnEdit}>
               Aceptar
             </Button>
           </Modal.Footer>

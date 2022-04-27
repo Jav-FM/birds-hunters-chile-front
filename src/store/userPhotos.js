@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//Estado inicial
 const initialState = {
   userPhotos: [],
 };
 
+//Slice que será exportada al archivo index, con sus reducers
 const userPhotosSlice = createSlice({
   name: "userPhotosSlice",
   initialState: initialState,

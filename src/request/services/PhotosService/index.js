@@ -1,6 +1,7 @@
 import request from "../../index";
 const BASE_URL = "https://birdshunters-chile-server.herokuapp.com/api/v1";
 
+//Función para creación de captura en el servidor
 const createPhoto = (data) => {
   return request({
     url: `${BASE_URL}/photos`,
@@ -10,6 +11,7 @@ const createPhoto = (data) => {
   });
 };
 
+//Función para traer las capturas del usuario
 const getPhotoByUser = (id) => {
   return request({
     url: `${BASE_URL}/photos/${id}`,
@@ -18,6 +20,7 @@ const getPhotoByUser = (id) => {
   });
 };
 
+//Función para reemplazar una captura
 const replacePhoto = (id, data) => {
   return request({
     url: `${BASE_URL}/photos/${id}`,
@@ -27,6 +30,7 @@ const replacePhoto = (id, data) => {
   });
 };
 
+//Función para eliminar una captura
 const deletePhoto = (id) => {
   return request({
     url: `${BASE_URL}/photos/${id}`,
@@ -35,6 +39,7 @@ const deletePhoto = (id) => {
   });
 };
 
+//Objeto con todas las funciones para exportarlas
 const PhotosService = {
   createPhoto,
   getPhotoByUser,

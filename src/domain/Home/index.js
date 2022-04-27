@@ -11,6 +11,8 @@ const Home = () => {
   const [randomNumber, setRandomNumber] = useState(47);
   const dispatch = useDispatch();
 
+  //Si no tengo aves en redux, las traigo desde API y las ordeno alfabeticamente
+  //Genero un numero random para el despliegue de fotos en el home
   useEffect(() => {
     if (birds.length === 0) {
       console.log("aqui")

@@ -11,6 +11,7 @@ const CustomInput = ({
 }) => {
   const [showError, setShowError] = useState(false);
 
+  //Manejo de mensaje de error
   useEffect(() => {
     if (errorText && errorText !== "") {
       setShowError(true);

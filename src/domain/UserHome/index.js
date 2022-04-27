@@ -15,11 +15,12 @@ const UserHome = () => {
   const loading = useSelector((state) => state.loading.loading);
   const [alertContent, setAlertContent] = useState("");
   const [lastBirds, setLastBirds] = useState([]);
-  const [predominantOrder, setPredominantOrder] = useState("")
+  const [predominantOrder, setPredominantOrder] = useState("");
   const { userData } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Traigo desde base de datos las capturas actualizadas
   useEffect(() => {
     const getUserPhotos = async () => {
       try {
@@ -30,7 +31,10 @@ const UserHome = () => {
         dispatch(loadingActions.setLoading(false));
         if (!e.data) {
           setAlertContent("No se pudo establecer conexión con el servidor.");
-        } else  if (!e.data.error) { setAlertContent(e.data); console.log(e.data) } else {
+        } else if (!e.data.error) {
+          setAlertContent(e.data);
+          console.log(e.data);
+        } else {
           setAlertContent(e.data.error);
         }
         setTimeout(() => {
@@ -45,6 +49,7 @@ const UserHome = () => {
     dispatch(loadingActions.setLoading(false));
   }, []);
 
+  //Si existen capturas, genero los datos que mostraré en la página de incio
   useEffect(() => {
     if (userPhotos.length > 0) {
       const mostResent = userPhotos.reduce((mostRecent, item) =>
@@ -59,7 +64,7 @@ const UserHome = () => {
             : b,
         null
       );
-      setPredominantOrder(mostRepitedOrder)
+      setPredominantOrder(mostRepitedOrder);
     }
   }, [userPhotos]);
 

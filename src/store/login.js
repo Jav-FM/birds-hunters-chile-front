@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//estado inicial
 const initialState = {
   loginState: false,
   userData: {},
 };
 
+//Slice que será exportada al archivo index, con sus reducers
 const loginSlice = createSlice({
   name: "loginSlice",
   initialState: initialState,
@@ -15,7 +17,7 @@ const loginSlice = createSlice({
     },
     logout(state) {
       state.loginState = false;
-      state.userData = {}
+      state.userData = {};
     },
   },
 });

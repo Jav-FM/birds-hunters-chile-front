@@ -27,6 +27,7 @@ const EditCapture = () => {
   const [birdOrder, setBirdOrder] = useState("");
   const [alertContent, setAlertContent] = useState("");
 
+  //Se limpian campos, se trae especie al input correspondiente y se traen datos de API para campos orden y nombre
   useEffect(() => {
     setSelectedSpecies(params.bird_id);
     setDate("");
@@ -43,23 +44,27 @@ const EditCapture = () => {
       });
   }, []);
 
+  //Manejo de carga de archivo para previsualización y obtención de url
   const handleSetFile = (e) => {
     setFile(e.target.value);
     setSrc(URL.createObjectURL(e.target.files[0]));
   };
 
+  //Función que ejecuta el registro de los cambios.
   const handleRegister = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    form.append("bird_id", params.bird_id)
+    form.append("bird_id", params.bird_id);
     form.append("user_id", userData.id);
     form.append("order", birdOrder);
     form.append("name", birdName);
     console.log(Object.fromEntries(form));
 
-
     try {
-      const createPhotoResponse = await PhotosService.replacePhoto(params.capture_id,form);
+      const createPhotoResponse = await PhotosService.replacePhoto(
+        params.capture_id,
+        form
+      );
       if (createPhotoResponse.data.ok) {
         const getPhotosResponse = await PhotosService.getPhotoByUser(
           userData.id
@@ -70,7 +75,7 @@ const EditCapture = () => {
       }
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
-      if (!e.data.error) {
+      if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
         setAlertContent(e.data.error);

@@ -36,6 +36,7 @@ const Register = () => {
     dispatch(loadingActions.setLoading(false));
   }, []);
 
+  //Validadores de formato en función del campo
   const validateCamps = (e) => {
     let validator;
     if (e === firstNames || e === firstLastName || e === secondLastName) {
@@ -56,6 +57,7 @@ const Register = () => {
     return validator.test(e);
   };
 
+  //Validador para reingreso de contraseña
   const validatePasswordReenter = (e) => {
     if (e === password) {
       return true;
@@ -64,6 +66,7 @@ const Register = () => {
     }
   };
 
+  //Ejecución e validadores
   useEffect(() => {
     if (id !== "") {
       id.length < 8
@@ -140,6 +143,7 @@ const Register = () => {
     passwordReenter,
   ]);
 
+  //Si corresponde, habilito botón
   useEffect(() => {
     if (
       id !== "" &&
@@ -182,6 +186,7 @@ const Register = () => {
     passwordReenterError,
   ]);
 
+  //Función que ejecuta el registro de usuario y lleva a vista de login
   const handleRegister = async (e) => {
     e.preventDefault();
     dispatch(loadingActions.setLoading(true));
@@ -202,9 +207,7 @@ const Register = () => {
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
       if (!e.data) {
-        setAlertContent(
-          "No se pudo establecer conexión con el servidor."
-        );
+        setAlertContent("No se pudo establecer conexión con el servidor.");
       } else if (!e.data.error) {
         setAlertContent(e.data);
       } else {
