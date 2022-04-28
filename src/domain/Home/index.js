@@ -14,8 +14,14 @@ const Home = () => {
   //Si no tengo aves en redux, las traigo desde API y las ordeno alfabeticamente
   //Genero un numero random para el despliegue de fotos en el home
   useEffect(() => {
+    const randomNumber = (min, max) => {
+      const r = Math.random() * (max - min) + min;
+      return Math.floor(r);
+    };
+    const thisRandomNumber = randomNumber(1, 200);
+    setRandomNumber(thisRandomNumber);
     if (birds.length === 0) {
-      console.log("aqui")
+      console.log("aqui");
       dispatch(loadingActions.setLoading(true));
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
@@ -24,14 +30,6 @@ const Home = () => {
             a.name.spanish.localeCompare(b.name.spanish)
           );
           dispatch(birdsActions.setBirds(orderedBirds));
-          const randomNumber = (min, max) => {
-            const r = Math.random() * (max - min) + min;
-            return Math.floor(r);
-          };
-
-          const thisRandomNumber = randomNumber(1, 200);
-          setRandomNumber(thisRandomNumber);
-
           dispatch(loadingActions.setLoading(false));
         });
     } else {
