@@ -85,7 +85,6 @@ const NewCapture = () => {
     form.append("user_id", userData.id);
     form.append("order", birdOrder);
     form.append("name", birdName);
-    console.log(Object.fromEntries(form));
     try {
       const createPhotoResponse = await PhotosService.createPhoto(form);
       if (createPhotoResponse.data.ok) {
@@ -93,10 +92,14 @@ const NewCapture = () => {
           userData.id
         );
         const { data } = await getPhotosResponse.data;
+
         dispatch(userPhotosActions.setUserPhotos(data));
+
         navigate("/mycaptures");
       }
     } catch (e) {
+      setFile("");
+      setSrc("");
       if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
       } else {
@@ -116,7 +119,7 @@ const NewCapture = () => {
       ) : (
         <React.Fragment>
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <Alert variant="danger" className="mt-2 mb-0 mx-auto" style={{width: '80%'}}>
               {alertContent}
             </Alert>
           )}

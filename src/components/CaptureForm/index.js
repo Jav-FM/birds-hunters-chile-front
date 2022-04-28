@@ -17,6 +17,7 @@ const CaptureForm = ({
   setPlace,
   file,
   handleSetFile,
+  editMode,
 }) => {
   const [disabledButton, setDisabledButton] = useState(true);
   const birds = useSelector((state) => state.birds.birds);
@@ -57,7 +58,9 @@ const CaptureForm = ({
         onSubmit={handleRegister}
       >
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Especie</Form.Label>
+          <Form.Label>
+            Especie {handleSelectBird && "(Sólo figuran las no capturadas)"}
+          </Form.Label>
           <Form.Control
             name="bird_id"
             required
@@ -69,17 +72,26 @@ const CaptureForm = ({
             <option key={0} value={""}>
               Seleccionar
             </option>
-            {birds.map((b, i) => {
-              if (userPhotos.filter(p => p.bird_id === b.uid).length > 0) {
-                return null;
-              } else {
-                return (
+
+            {editMode
+              ? birds.map((b, i) => (
                   <option key={i + 1} value={b.uid}>
                     {b.name.spanish}
                   </option>
-                );
-              }
-            })}
+                ))
+              : birds.map((b, i) => {
+                  if (
+                    userPhotos.filter((p) => p.bird_id === b.uid).length > 0
+                  ) {
+                    return null;
+                  } else {
+                    return (
+                      <option key={i + 1} value={b.uid}>
+                        {b.name.spanish}
+                      </option>
+                    );
+                  }
+                })}
           </Form.Control>
         </Form.Group>
 

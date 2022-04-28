@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PhotosService from "../../request/services/PhotosService";
 import { userPhotosActions } from "../../store/userPhotos";
 import { CaptureForm } from "../../components/CaptureForm";
+import { BsArrowLeftCircleFill } from "react-icons/bs";
 
 const EditCapture = () => {
   const birds = useSelector((state) => state.birds.birds);
@@ -102,15 +103,21 @@ const EditCapture = () => {
             id="editcapture"
             className="d-flex flex-column align-items-center"
           >
-            <div className="container d-flex mt-5 mb-2 align-items-center justify-content-between px-5">
+            <div className="container d-flex mt-5 mb-2 align-items-center  px-5">
+              <h1 id="icon">
+                <BsArrowLeftCircleFill
+                  onClick={() => navigate(-1)}
+                  style={{
+                    color: "#8bc34a",
+                    paddingBottom: "5px",
+                    marginRight: 10,
+                  }}
+                />
+              </h1>
               <h2>
                 Reemplazar captura de:{" "}
                 <span style={{ color: "#8bc34a" }}>{birdName}</span>
               </h2>
-
-              <Button id="see-avepedia-button" onClick={() => navigate(-1)}>
-                Cancelar
-              </Button>
             </div>
 
             <CaptureForm
@@ -124,6 +131,7 @@ const EditCapture = () => {
               file={file}
               handleSetFile={handleSetFile}
               buttonText={"Reemplazar"}
+              editMode={true}
             />
           </div>
         </React.Fragment>
