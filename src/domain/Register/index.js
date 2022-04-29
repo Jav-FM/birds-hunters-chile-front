@@ -66,7 +66,7 @@ const Register = () => {
     }
   };
 
-  //Ejecución e validadores
+  //Ejecución de validadores
   useEffect(() => {
     if (id !== "") {
       id.length < 8

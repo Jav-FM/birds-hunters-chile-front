@@ -7,6 +7,8 @@ const CustomInput = ({
   type,
   required,
   errorText,
+  errorStyle,
+  errorMaxWidth,
   ...restOfProps
 }) => {
   const [showError, setShowError] = useState(false);
@@ -32,21 +34,29 @@ const CustomInput = ({
       {showError && (
         <div
           className="d-flex align-items-start gap-1"
-          style={{
+          style={errorMaxWidth ? errorMaxWidth :{
             maxWidth: "220px",
           }}
         >
           <p
-            style={{
-              color: "#ffffff",
-            }}
+            style={
+              errorStyle
+                ? errorStyle
+                : {
+                    color: "#ffffff",
+                  }
+            }
           >
             <BsExclamationCircleFill />
           </p>
           <p
-            style={{
-              color: "#ffffff"
-            }}
+            style={
+              errorStyle
+                ? errorStyle
+                : {
+                    color: "#ffffff",
+                  }
+            }
           >
             {errorText}
           </p>

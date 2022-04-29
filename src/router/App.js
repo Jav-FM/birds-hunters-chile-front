@@ -19,23 +19,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../store/login";
 import { userPhotosActions } from "../store/userPhotos";
 import { loadingActions } from "../store/loading";
-import { initializeApp } from "firebase/app";
 
 function App() {
   const { loginState } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [mainPadding, setMainPadding] = useState("0");
-
-  //Inicialización de app para deploy en Firebase
-  initializeApp({
-    apiKey: "AIzaSyAvEvlr_1VViXYfmSus3DZp9bOHVcUtF4M",
-    authDomain: "birdshunters-chile.firebaseapp.com",
-    projectId: "birdshunters-chile",
-    storageBucket: "birdshunters-chile.appspot.com",
-    messagingSenderId: "847126193909",
-    appId: "1:847126193909:web:5c1974dad17d765b8e87bc",
-  });
 
    //Validación continua de token, en caso de estar vencido se elimina de localStorage y se "vacía" redux
   useEffect(() => {
@@ -46,11 +35,11 @@ function App() {
       localStorage.removeItem("token");
       navigate("/");
     }
-  }, []); // eslint-disable-line
+  }, []);
 
   //Ajuste en padding del body en caso de que el usuario esté logueado (por sidebar)
   useEffect(() => {
-    if (loginState) {
+    if (loginState && localStorage.getItem("token")) {
       setMainPadding("200px");
     } else {
       setMainPadding("0");
@@ -62,7 +51,7 @@ function App() {
     <div className="App">
       <CustomNavbar />
       <div id="main">
-        {loginState && (
+        {(loginState && isLoginTokenValid()) && (
           <CustomSidebar id="main-sidebar" style={{ width: "200px" }} />
         )}
         <div

@@ -1,5 +1,5 @@
 import React from "react";
-import './CustomNavbar.scss'
+import "./CustomNavbar.scss";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,8 +7,9 @@ import { loadingActions } from "../../store/loading";
 import { loginActions } from "../../store/login";
 import { userPhotosActions } from "../../store/userPhotos";
 import { useNavigate } from "react-router-dom";
+import { isLoginTokenValid } from "../../utils/token";
 
-const CustomNavbar = ({...restOfProps}) => {
+const CustomNavbar = ({ ...restOfProps }) => {
   const loading = useSelector((state) => state.loading.loading);
   const { loginState } = useSelector((state) => state.login);
   const dispatch = useDispatch();
@@ -18,15 +19,22 @@ const CustomNavbar = ({...restOfProps}) => {
   const handleLogout = () => {
     dispatch(loadingActions.setLoading(true));
     dispatch(loginActions.logout());
-    dispatch(userPhotosActions.setUserPhotos([]))
+    dispatch(userPhotosActions.setUserPhotos([]));
     localStorage.removeItem("token");
     navigate("/");
-  }
+  };
 
   return (
     <React.Fragment>
       {!loading ? (
-        <Navbar id="navbar" expand="lg" collapseOnSelect className="navbar" variant="dark" {...restOfProps}>
+        <Navbar
+          id="navbar"
+          expand="lg"
+          collapseOnSelect
+          className="navbar"
+          variant="dark"
+          {...restOfProps}
+        >
           <Container fluid>
             <Navbar.Brand as={Link} to="/">
               Birds Hunters
@@ -44,7 +52,11 @@ const CustomNavbar = ({...restOfProps}) => {
                   Avepedia
                 </Nav.Link>
               </Nav>
-              {!loginState ? (
+              {loginState && isLoginTokenValid() ? (
+                <Nav>
+                  <Nav.Link onClick={handleLogout}>Cerrar sesión</Nav.Link>
+                </Nav>
+              ) : (
                 <Nav>
                   <Nav.Link as={Link} to="/register">
                     Registrate
@@ -53,15 +65,7 @@ const CustomNavbar = ({...restOfProps}) => {
                     Inicia sesión
                   </Nav.Link>
                 </Nav>
-              ) : (
-                <Nav>
-                  <Nav.Link onClick={handleLogout}>
-                    Cerrar sesión
-                  </Nav.Link>
-                </Nav>
-              )
-            
-            }
+              )}
             </Navbar.Collapse>
           </Container>
         </Navbar>

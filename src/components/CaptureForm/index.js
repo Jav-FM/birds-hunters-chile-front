@@ -4,7 +4,7 @@ import { Form, Button } from "react-bootstrap";
 import { CustomInput } from "../Common/CustomInput";
 import { GiEgyptianBird } from "react-icons/gi";
 import { useSelector } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
 
 const CaptureForm = ({
   buttonText,
@@ -14,9 +14,11 @@ const CaptureForm = ({
   handleSelectBird,
   date,
   setDate,
+  dateError,
   place,
   setPlace,
-  file,
+  fileValue,
+  fileError,
   handleSetFile,
   editMode,
 }) => {
@@ -26,12 +28,19 @@ const CaptureForm = ({
 
   // habilitar botón
   useEffect(() => {
-    if (selectedSpecies !== "" && date !== "" && place !== "" && file !== "") {
+    if (
+      selectedSpecies !== "" &&
+      date !== "" &&
+      dateError === "" &&
+      place !== "" &&
+      fileValue !== "" &&
+      fileError === ""
+    ) {
       setDisabledButton(false);
     } else {
       setDisabledButton(true);
     }
-  }, [selectedSpecies, date, place, file]);
+  }, [selectedSpecies, date, dateError, place, fileValue]);
 
   return (
     <div
@@ -104,6 +113,9 @@ const CaptureForm = ({
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            errorText={dateError}
+            errorStyle={{ color: "#3a3d3a" }}
+            errorMaxWidth={{ maxWidth: "350px" }}
           />
         </Form.Group>
 
@@ -119,11 +131,13 @@ const CaptureForm = ({
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Control
-            name="photo"
+          <CustomInput
             type="file"
-            value={file}
+            value={fileValue}
             onChange={handleSetFile}
+            errorText={fileError}
+            errorStyle={{ color: "#3a3d3a" }}
+            errorMaxWidth={{ maxWidth: "350px" }}
           />
         </Form.Group>
 

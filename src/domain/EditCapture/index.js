@@ -9,6 +9,9 @@ import PhotosService from "../../request/services/PhotosService";
 import { userPhotosActions } from "../../store/userPhotos";
 import { CaptureForm } from "../../components/CaptureForm";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import moment from "moment";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { imagesStorage } from "../../firebase-config";
 
 const EditCapture = () => {
   const birds = useSelector((state) => state.birds.birds);
@@ -20,8 +23,11 @@ const EditCapture = () => {
     params.bird_id ? params.bird_id : ""
   );
   const [date, setDate] = useState("");
+  const [dateError, setDateError] = useState("");
   const [place, setPlace] = useState("");
   const [file, setFile] = useState("");
+  const [fileValue, setFileValue] = useState("");
+  const [fileError, setFileError] = useState("");
   const [src, setSrc] = useState("");
   const { userData } = useSelector((state) => state.login);
   const [birdName, setBirdName] = useState("");
@@ -45,39 +51,89 @@ const EditCapture = () => {
       });
   }, []);
 
-  //Manejo de carga de archivo para previsualización y obtención de url
+  //Validador para fecha de captura
+  const validateDate = (e) => {
+    const today = moment(new Date()).format("YYYY-MM-DD");
+    const selectedDay = moment(e);
+    if (selectedDay.diff(moment(today), "days") > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  //Ejecución de validadores
+  useEffect(() => {
+    if (date !== "") {
+      validateDate(date)
+        ? setDateError("")
+        : setDateError("La fecha no puede ser posterior al día de hoy.");
+    } else {
+      setDateError("");
+    }
+  }, [date]);
+
+  //Manejo de selección de archivos, previsualización y obtención de URL
   const handleSetFile = (e) => {
-    setFile(e.target.value);
-    setSrc(URL.createObjectURL(e.target.files[0]));
+    const selectedFile = e.target.files[0];
+    const selectedFileValue = e.target.value;
+    const types = ["image/png", "image/jpeg"];
+    if (selectedFile) {
+      // setFile(e.target.value);
+      setFile(selectedFile);
+      setFileValue(selectedFileValue);
+      if (types.includes(selectedFile.type)) {
+        setSrc(URL.createObjectURL(selectedFile));
+        setFileError("");
+      } else {
+        setSrc("");
+        setFileError("La imagen debe ser formato .png, .jpg o .jpeg.");
+      }
+    }
   };
 
   //Función que ejecuta el registro de los cambios.
   const handleRegister = async (e) => {
     e.preventDefault();
-    const form = new FormData(e.target);
-    form.append("bird_id", params.bird_id);
-    form.append("user_id", userData.id);
-    form.append("order", birdOrder);
-    form.append("name", birdName);
-    console.log(Object.fromEntries(form));
-
+    dispatch(loadingActions.setLoading(true));
+    const imageName = `${selectedSpecies}-${userData.id}-${file.name}`;
+    const storageRef = ref(imagesStorage, `/files/${imageName}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
     try {
-      const createPhotoResponse = await PhotosService.replacePhoto(
-        params.capture_id,
-        form
+      uploadTask.on(
+        "state_changed",
+        () => {},
+        (error) => {
+          throw new Error(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+            console.log(url)
+            const form = new FormData(e.target);
+            form.append("bird_id", params.bird_id);
+            form.append("user_id", userData.id);
+            form.append("order", birdOrder);
+            form.append("name", birdName);
+            form.append("photo", url);
+            const createPhotoResponse = await PhotosService.replacePhoto(
+              params.capture_id,
+              form
+            );
+            if (createPhotoResponse.data.ok) {
+              const getPhotosResponse = await PhotosService.getPhotoByUser(
+                userData.id
+              );
+              const { data } = await getPhotosResponse.data;
+              dispatch(userPhotosActions.setUserPhotos(data));
+              navigate("/mycaptures");
+            }
+          });
+        }
       );
-      if (createPhotoResponse.data.ok) {
-        const getPhotosResponse = await PhotosService.getPhotoByUser(
-          userData.id
-        );
-        const { data } = await getPhotosResponse.data;
-        dispatch(userPhotosActions.setUserPhotos(data));
-        navigate("/mycaptures");
-      }
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
       if (!e.data) {
-        setAlertContent("No se pudo establecer conexión con el servidor.");
+        setAlertContent(e);
       } else {
         setAlertContent(e.data.error);
       }
@@ -126,9 +182,11 @@ const EditCapture = () => {
               selectedSpecies={selectedSpecies}
               date={date}
               setDate={setDate}
+              dateError={dateError}
               place={place}
               setPlace={setPlace}
-              file={file}
+              fileValue={fileValue}
+              fileError={fileError}
               handleSetFile={handleSetFile}
               buttonText={"Reemplazar"}
               editMode={true}
