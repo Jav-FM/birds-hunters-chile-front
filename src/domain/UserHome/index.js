@@ -22,6 +22,7 @@ const UserHome = () => {
 
   // Traigo desde base de datos las capturas actualizadas
   useEffect(() => {
+    console.log(userData.id)
     const getUserPhotos = async () => {
       try {
         const response = await PhotosService.getPhotoByUser(userData.id);
@@ -42,10 +43,10 @@ const UserHome = () => {
         }, 5000);
       }
     };
-    if (userPhotos.length === 0) {
+
       dispatch(loadingActions.setLoading(true));
       getUserPhotos();
-    }
+    
     dispatch(loadingActions.setLoading(false));
   }, []);
 
