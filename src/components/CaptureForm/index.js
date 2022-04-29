@@ -4,6 +4,7 @@ import { Form, Button } from "react-bootstrap";
 import { CustomInput } from "../Common/CustomInput";
 import { GiEgyptianBird } from "react-icons/gi";
 import { useSelector } from "react-redux";
+import moment from 'moment';
 
 const CaptureForm = ({
   buttonText,

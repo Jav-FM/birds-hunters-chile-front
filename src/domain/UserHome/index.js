@@ -103,7 +103,7 @@ const UserHome = () => {
                 {userPhotos.length === 0 ? (
                   <h3>No aplica</h3>
                 ) : (
-                  <h3>{predominantOrder}</h3>
+                  <h3 style={{textAlign: 'center'}}>{predominantOrder}</h3>
                 )}
               </div>
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">
@@ -112,7 +112,6 @@ const UserHome = () => {
                   <h3>No aplica</h3>
                 ) : (
                   <React.Fragment>
-                    {" "}
                     <h3>{lastBirds.name}</h3>
                     <div className="d-flex gap-3 align-items-center">
                       <h4 className="mb-0">

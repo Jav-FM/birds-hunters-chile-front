@@ -205,14 +205,19 @@ const Register = () => {
       const response = await UserService.createUser(registerData);
       if (response.data.ok) navigate("/login");
     } catch (e) {
-      dispatch(loadingActions.setLoading(false));
       if (!e.data) {
         setAlertContent("No se pudo establecer conexión con el servidor.");
-      } else if (!e.data.error) {
-        setAlertContent(e.data);
+      } else if (
+        e.data.error ==
+        'error: duplicate key value violates unique constraint "users_rut_key"'
+      ) {
+        setAlertContent(
+          "El rut o el correo ingresado ya existe en nuestra base de datos."
+        );
       } else {
         setAlertContent(e.data.error);
       }
+      dispatch(loadingActions.setLoading(false));
       setTimeout(() => {
         setAlertContent("");
       }, 5000);

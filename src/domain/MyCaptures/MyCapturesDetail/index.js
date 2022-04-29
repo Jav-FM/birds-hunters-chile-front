@@ -8,6 +8,7 @@ import { Button, Alert, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import PhotosService from "../../../request/services/PhotosService";
+import moment from "moment";
 
 const MyCapturesDetail = () => {
   const loading = useSelector((state) => state.loading.loading);
@@ -33,7 +34,7 @@ const MyCapturesDetail = () => {
 
   //Función para eliminar captura
   const handleDelete = async () => {
-    handleCloseDeleteModal()
+    handleCloseDeleteModal();
     dispatch(loadingActions.setLoading(true));
     try {
       const createPhotoResponse = await PhotosService.deletePhoto(bird.id);
@@ -61,9 +62,9 @@ const MyCapturesDetail = () => {
 
   //Función ejecutada al aceptar el éxito de la captura en el modal
   const handleExitOnDelete = () => {
-    handleCloseConfirmationModal()
+    handleCloseConfirmationModal();
     navigate("/mycaptures");
-  }
+  };
 
   return (
     <React.Fragment>
@@ -87,29 +88,34 @@ const MyCapturesDetail = () => {
             </Alert>
           )}
 
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>¿Estás seguro/a de que quieres eliminar esta captura?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleDelete}>
-            Sí, eliminar
-          </Button>
-          <Button variant="danger" onClick={handleCloseDeleteModal}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirmación</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              ¿Estás seguro/a de que quieres eliminar esta captura?
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={handleDelete}>
+                Sí, eliminar
+              </Button>
+              <Button variant="danger" onClick={handleCloseDeleteModal}>
+                Cancelar
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
-      <Modal show={showConfirmationModal} onHide={handleCloseConfirmationModal}>
-        <Modal.Body>Captura eliminada con éxito</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleExitOnDelete}>
-            Aceptar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal
+            show={showConfirmationModal}
+            onHide={handleCloseConfirmationModal}
+          >
+            <Modal.Body>Captura eliminada con éxito</Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={handleExitOnDelete}>
+                Aceptar
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
           <div className="container d-flex mt-5 mb-2 align-items-center justify-content-between px-4">
             <div
@@ -141,7 +147,8 @@ const MyCapturesDetail = () => {
             </div>
             <div id="info" className="wrap-reverse">
               <p>
-                <b>Fecha de captura:</b> {bird.date}
+                <b>Fecha de captura:</b>{" "}
+                {moment(bird.date).format("DD/MM/YYYY")}
               </p>
               <p>
                 <b>Lugar de avistamiento:</b> {bird.place}
