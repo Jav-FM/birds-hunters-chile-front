@@ -37,9 +37,9 @@ function App() {
     appId: "1:847126193909:web:5c1974dad17d765b8e87bc",
   });
 
-  //Validación continua de token, en caso de estar vencido se elimina de localStorage y se "vacía" redux
+   //Validación continua de token, en caso de estar vencido se elimina de localStorage y se "vacía" redux
   useEffect(() => {
-    if (!isLoginTokenValid()) {
+    if (localStorage.getItem("token") && !isLoginTokenValid()) {
       dispatch(loadingActions.setLoading(true));
       dispatch(loginActions.logout());
       dispatch(userPhotosActions.setUserPhotos([]));
