@@ -35,7 +35,7 @@ function App() {
       localStorage.removeItem("token");
       navigate("/");
     }
-  }, []);
+  }, []); // eslint-disable-line 
 
   //Ajuste en padding del body en caso de que el usuario esté logueado (por sidebar)
   useEffect(() => {
@@ -44,7 +44,7 @@ function App() {
     } else {
       setMainPadding("0");
     }
-  }, [loginState]);
+  }, []); // eslint-disable-line 
 
   //Devuelvo las rutas según el estado de login y la validación de token
   return (

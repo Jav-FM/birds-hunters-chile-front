@@ -34,7 +34,7 @@ const Register = () => {
 
   useEffect(() => {
     dispatch(loadingActions.setLoading(false));
-  }, []);
+  }, []); // eslint-disable-line
 
   //Validadores de formato en función del campo
   const validateCamps = (e) => {
@@ -141,7 +141,7 @@ const Register = () => {
     email,
     password,
     passwordReenter,
-  ]);
+  ]); // eslint-disable-line
 
   //Si corresponde, habilito botón
   useEffect(() => {
@@ -184,7 +184,7 @@ const Register = () => {
     passwordError,
     passwordReenter,
     passwordReenterError,
-  ]);
+  ]); // eslint-disable-line 
 
   //Función que ejecuta el registro de usuario y lleva a vista de login
   const handleRegister = async (e) => {
