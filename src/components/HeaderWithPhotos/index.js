@@ -34,6 +34,15 @@ const HeaderWithPhotos = ({title}) => {
 
   return (
     <div>
+            <div
+        id="home-photos"
+        className="container-fluid d-flex flex-wrap justify-content-center"
+        style={{ height: "200px", overflow: "hidden" }}
+      >
+        {birds.slice(randomNumber, randomNumber + 16).map((b, i) => {
+          return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
+        })}
+      </div>
       <div
         className="container-fluid d-flex justify-content-center align-items-center"
         style={{
@@ -44,15 +53,7 @@ const HeaderWithPhotos = ({title}) => {
       >
         <h2>{title}</h2>
       </div>
-      <div
-        id="home-photos"
-        className="container-fluid d-flex flex-wrap justify-content-center"
-        style={{ height: "200px", overflow: "hidden" }}
-      >
-        {birds.slice(randomNumber, randomNumber + 16).map((b, i) => {
-          return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
-        })}
-      </div>
+
     </div>
   );
 };
