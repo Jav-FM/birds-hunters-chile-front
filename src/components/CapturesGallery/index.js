@@ -130,7 +130,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
     <React.Fragment>
       {userPhotos.length !== 0 ? (
         <React.Fragment>
-          <div className="container d-flex flex-wrap gap-3 mb-4 justify-content-around">
+          <div className="container d-flex flex-wrap gap-3 my-5 justify-content-around">
             <InputGroup style={{ maxWidth: "400px", height: "0px" }}>
               <InputGroup.Text style={{ backgroundColor: "#bef67a" }}>
                 Selecciona taxonomía
@@ -174,7 +174,6 @@ const CapturesGallery = ({ ...restOfProps }) => {
             <div className="d-flex flex-wrap gap-4 justify-content-center mb-4">
               {state.currentData &&
                 state.currentData.map((item, index) => (
-                  <React.Fragment>
                     <Card
                       className="bird-card"
                       key={index}
@@ -190,7 +189,6 @@ const CapturesGallery = ({ ...restOfProps }) => {
                         <Card.Title>{item.name}</Card.Title>
                       </Card.Body>
                     </Card>
-                  </React.Fragment>
                 ))}
             </div>
 

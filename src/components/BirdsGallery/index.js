@@ -142,7 +142,7 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     <React.Fragment>
       {birds.length !== 0 ? (
         <React.Fragment>
-          <div className="container mb-4 mx-5 d-flex justify-content-between flex-wrap">
+          <div className="container my-5 mx-5 d-flex justify-content-between flex-wrap">
             <InputGroup
               style={{ maxWidth: "400px" }}
               className="container mb-4 mx-4"

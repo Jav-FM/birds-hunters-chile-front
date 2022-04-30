@@ -6,6 +6,7 @@ import { Register } from "../domain/Register";
 import { Avepedia } from "../domain/Avepedia";
 import { AvepediaDetail } from "../domain/Avepedia/AvepediaDetail";
 import { UserHome } from "../domain/UserHome";
+import {About} from "../domain/About";
 import { MyCaptures } from "../domain/MyCaptures";
 import { MyCapturesDetail } from "../domain/MyCaptures/MyCapturesDetail";
 import { NewCapture } from "../domain/NewCapture";
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/avepedia" element={<Avepedia />} />
                 <Route path="/avepedia/:id" element={<AvepediaDetail />} />
                 <Route path="*" element={<Home />} />
@@ -71,6 +73,7 @@ function App() {
             ) : (
               <React.Fragment>
                 <Route path="/" element={<UserHome />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/avepedia" element={<Avepedia />} />
                 <Route path="/avepedia/:id" element={<AvepediaDetail />} />
                 <Route path="/mycaptures" element={<MyCaptures />} />

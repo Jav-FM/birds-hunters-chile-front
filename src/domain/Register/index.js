@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Register.scss";
 import { CustomFormContainer } from "../../components/CustomFormContainer";
+import { HeaderWithPhotos } from "../../components/HeaderWithPhotos";
 import { CustomInput } from "../../components/Common/CustomInput";
-import { Form, Button, Alert } from "react-bootstrap";
+import { CustomAlert } from "../../components/Common/CustomAlert";
+import { Form, Button } from "react-bootstrap";
 import { loadingActions } from "../../store/loading";
-import { useDispatch } from "react-redux";
+import { birdsActions } from "../../store/birds";
+import { useSelector, useDispatch } from "react-redux";
 import { validate, format } from "rut.js";
 import UserService from "../../request/services/UserService";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const dispatch = useDispatch();
   const [disabledButton, setDisabledButton] = useState(true);
+  const birds = useSelector((state) => state.birds.birds);
   const [id, setId] = useState("");
   const [idError, setIdError] = useState("");
   const [firstNames, setFirstNames] = useState("");
@@ -184,7 +188,7 @@ const Register = () => {
     passwordError,
     passwordReenter,
     passwordReenterError,
-  ]); // eslint-disable-line 
+  ]); // eslint-disable-line
 
   //Función que ejecuta el registro de usuario y lleva a vista de login
   const handleRegister = async (e) => {
@@ -227,12 +231,12 @@ const Register = () => {
   return (
     <div id="register" className="d-flex flex-column align-items-center">
       {alertContent !== "" && (
-        <Alert variant="danger" className="mt-2 mb-0">
+        <CustomAlert variant="danger" className="mt-2 mb-0">
           {alertContent}
-        </Alert>
+        </CustomAlert>
       )}
-      <h2 className="my-5">Registrate</h2>
-      <CustomFormContainer className="mb-5">
+      <HeaderWithPhotos title="Regístrate" />
+      <CustomFormContainer className="my-5">
         <Form className="d-flex flex-column align-items-center">
           <h3>Datos personales</h3>
           <div className="inputs-container d-flex gap-3 flex-wrap justify-content-between">

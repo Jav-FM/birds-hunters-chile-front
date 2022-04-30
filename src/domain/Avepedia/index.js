@@ -18,7 +18,9 @@ const Avepedia = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          const orderedBirds = json.sort((a, b) =>
+            a.name.spanish.localeCompare(b.name.spanish)
+          );
           dispatch(birdsActions.setBirds(orderedBirds));
           dispatch(loadingActions.setLoading(false));
         });
@@ -31,8 +33,18 @@ const Avepedia = () => {
         <LoadingScreen />
       ) : (
         <div id="avepedia" className="d-flex flex-column align-items-center">
-          <h1 className="mt-5">Avepedia</h1>
-          <h5 className="mb-5">Aves nativas de Chile</h5>
+          <div
+            className="container-fluid d-flex flex-column justify-content-center align-items-center"
+            style={{
+              height: "160px",
+              overflow: "hidden",
+              backgroundColor: "#8BC34A66",
+            }}
+          >
+            <h1>Avepedia</h1>
+            <h5>Aves nativas de Chile</h5>
+          </div>
+
           {birds.length !== 0 ? (
             <BirdsGallery birds={birds} />
           ) : (

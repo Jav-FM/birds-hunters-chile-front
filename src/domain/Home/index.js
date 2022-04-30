@@ -49,7 +49,7 @@ const Home = () => {
             style={{height: '590px',  overflow: 'hidden'}}
          >
 
-            {birds.slice(randomNumber, randomNumber + 30).map((b, i) => {
+            {birds.slice(randomNumber, randomNumber + 40).map((b, i) => {
               return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
             })}
 

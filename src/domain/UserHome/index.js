@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./UserHome.scss";
 import { HomeHeader } from "../../components/HomeHeader";
 import { LoadingScreen } from "../../components/LoadingScreen";
+import { CustomAlert } from "../../components/Common/CustomAlert";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userPhotosActions } from "../../store/userPhotos";
 import PhotosService from "../../request/services/PhotosService";
 import { loadingActions } from "../../store/loading";
-import { Alert, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import moment from "moment";
 
 const UserHome = () => {
@@ -74,9 +75,9 @@ const UserHome = () => {
       ) : (
         <div id="userhome">
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <CustomAlert variant="danger" className="mt-2 mb-0">
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
           <HomeHeader />
 

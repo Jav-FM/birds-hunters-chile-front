@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./MyCapturesDetail.scss";
 import { LoadingScreen } from "../../../components/LoadingScreen";
+import { CustomAlert } from "../../../components/Common/CustomAlert";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingActions } from "../../../store/loading";
 import { userPhotosActions } from "../../../store/userPhotos";
-import { Button, Alert, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
 import { IoSearchCircleSharp } from "react-icons/io5";
@@ -85,9 +86,9 @@ const MyCapturesDetail = () => {
           className="d-flex flex-column align-items-center"
         >
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <CustomAlert variant="danger" className="mt-2 mb-0">
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
 
           <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>

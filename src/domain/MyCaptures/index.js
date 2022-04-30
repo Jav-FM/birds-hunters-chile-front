@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { CapturesGallery } from "../../components/CapturesGallery";
+import { HeaderWithoutPhotos } from "../../components/HeaderWithoutPhotos";
 import { useSelector, useDispatch } from "react-redux";
 import { birdsActions } from "../../store/birds";
+import { CustomAlert } from "../../components/Common/CustomAlert";
 import { loadingActions } from "../../store/loading";
-import { Alert, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import PhotosService from "../../request/services/PhotosService";
 import { userPhotosActions } from "../../store/userPhotos";
 import { useNavigate } from "react-router-dom";
@@ -50,16 +52,16 @@ const MyCaptures = () => {
       ) : (
         <div id="mycaptures" className="d-flex flex-column align-items-center">
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <CustomAlert variant="danger" className="mt-2 mb-0">
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
-          <h1 className="my-5">Mis capturas</h1>
+          <HeaderWithoutPhotos title="Mis capturas" />
           {userPhotos.length !== 0 ? (
             <CapturesGallery />
           ) : (
             <React.Fragment>
-              <h4 className="mt-4 mb-4">Aún no tienes capturas registradas</h4>
+              <h4 className="my-5">Aún no tienes capturas registradas</h4>
               <Button onClick={() => navigate("/newcapture")}>
                 Registra tu primera captura
               </Button>

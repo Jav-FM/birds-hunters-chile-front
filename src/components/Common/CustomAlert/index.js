@@ -1,10 +1,12 @@
 import { Alert } from "react-bootstrap";
 
-const CustomAlert = ({ text, variant, ...restOfProps }) => {
+const CustomAlert = ({ text, children, variant, ...restOfProps }) => {
   return (
-    <Alert variant={variant} {...restOfProps}>
-      {text}
-    </Alert>
+    <div style={{ position: "absolute", top: 60 }}>
+      <Alert variant={variant} {...restOfProps}>
+       {children ? children : text} 
+      </Alert>
+    </div>
   );
 };
 

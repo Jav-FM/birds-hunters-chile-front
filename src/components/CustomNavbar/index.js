@@ -51,6 +51,9 @@ const CustomNavbar = ({ ...restOfProps }) => {
                 <Nav.Link as={Link} to="/avepedia">
                   Avepedia
                 </Nav.Link>
+                <Nav.Link as={Link} to="/about">
+                  Sobre Birds Hunters
+                </Nav.Link>
               </Nav>
               {loginState && isLoginTokenValid() ? (
                 <Nav>
@@ -59,7 +62,7 @@ const CustomNavbar = ({ ...restOfProps }) => {
               ) : (
                 <Nav>
                   <Nav.Link as={Link} to="/register">
-                    Registrate
+                    Regístrate
                   </Nav.Link>
                   <Nav.Link as={Link} to="/login">
                     Inicia sesión

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingActions } from "../../store/loading";
+import { CustomAlert } from "../../components/Common/CustomAlert";
 import { birdsActions } from "../../store/birds";
-import { Alert, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import PhotosService from "../../request/services/PhotosService";
 import { userPhotosActions } from "../../store/userPhotos";
@@ -149,9 +150,9 @@ const EditCapture = () => {
       ) : (
         <React.Fragment>
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <CustomAlert variant="danger" className="mt-2 mb-0">
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
 
           <div

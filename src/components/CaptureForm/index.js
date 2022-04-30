@@ -45,23 +45,8 @@ const CaptureForm = ({
   return (
     <div
       id="capture-form"
-      className="container d-flex gap-5 flex-wrap align-items-center justify-content-evenly my-3"
+      className="container d-flex gap-2 flex-wrap align-items-center justify-content-evenly my-3"
     >
-      {src === "" ? (
-        <div id="waiting-picture" className="d-flex align-items-center px-5">
-          <h1 id="waiting-picture-icon">
-            <GiEgyptianBird />
-          </h1>
-        </div>
-      ) : (
-        <div
-          id="upload-picture-container"
-          className="d-flex align-items-center px-5"
-        >
-          <img id="upload-picture" src={src} alt="fotoseleccionada" />
-        </div>
-      )}
-
       <Form
         id="picture-form"
         className="d-flex flex-column justify-content-center"
@@ -145,6 +130,21 @@ const CaptureForm = ({
           {buttonText}
         </Button>
       </Form>
+
+      {src === "" ? (
+        <div id="waiting-picture" className="d-flex align-items-center px-5">
+          <h1 id="waiting-picture-icon">
+            <GiEgyptianBird />
+          </h1>
+        </div>
+      ) : (
+        <div
+          id="upload-picture-container"
+          className="d-flex align-items-center px-5"
+        >
+          <img id="upload-picture" src={src} alt="fotoseleccionada" />
+        </div>
+      )}
     </div>
   );
 };

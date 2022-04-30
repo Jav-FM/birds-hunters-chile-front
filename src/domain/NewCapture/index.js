@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { LoadingScreen } from "../../components/LoadingScreen";
+import { CustomAlert } from "../../components/Common/CustomAlert";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingActions } from "../../store/loading";
 import { birdsActions } from "../../store/birds";
-import { Alert } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { HeaderWithPhotos } from "../../components/HeaderWithPhotos";
 import PhotosService from "../../request/services/PhotosService";
 import { userPhotosActions } from "../../store/userPhotos";
 import { CaptureForm } from "../../components/CaptureForm";
@@ -177,36 +178,37 @@ const NewCapture = () => {
       ) : (
         <React.Fragment>
           {alertContent !== "" && (
-            <Alert
+            <CustomAlert
               variant="danger"
               className="mt-2 mb-0 mx-auto"
               style={{ width: "80%" }}
             >
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
 
           <div
             id="newcapture"
             className="d-flex flex-column align-items-center"
           >
-            <h1 className="my-5">Nueva captura</h1>
-
-            <CaptureForm
-              src={src}
-              handleRegister={handleRegister}
-              selectedSpecies={selectedSpecies}
-              handleSelectBird={handleSelectBird}
-              date={date}
-              setDate={setDate}
-              dateError={dateError}
-              place={place}
-              setPlace={setPlace}
-              fileValue={fileValue}
-              fileError={fileError}
-              handleSetFile={handleSetFile}
-              buttonText={"Registrar"}
-            />
+            <HeaderWithPhotos title="Nueva captura" />
+            <div className="container my-5">
+              <CaptureForm
+                src={src}
+                handleRegister={handleRegister}
+                selectedSpecies={selectedSpecies}
+                handleSelectBird={handleSelectBird}
+                date={date}
+                setDate={setDate}
+                dateError={dateError}
+                place={place}
+                setPlace={setPlace}
+                fileValue={fileValue}
+                fileError={fileError}
+                handleSetFile={handleSetFile}
+                buttonText={"Registrar"}
+              />
+            </div>
           </div>
         </React.Fragment>
       )}

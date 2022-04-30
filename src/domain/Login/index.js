@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./Login.scss";
 import { CustomFormContainer } from "../../components/CustomFormContainer";
+import { HeaderWithPhotos } from "../../components/HeaderWithPhotos";
 import { CustomInput } from "../../components/Common/CustomInput";
 import { Form, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { loadingActions } from "../../store/loading";
 import { birdsActions } from "../../store/birds";
-import { Spinner, Alert } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
+import { CustomAlert } from "../../components/Common/CustomAlert";
 import UserService from "../../request/services/UserService";
 import jwt_decode from "jwt-decode";
 import { loginActions } from "../../store/login";
@@ -32,7 +34,9 @@ const Login = () => {
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())
         .then((json) => {
-          const orderedBirds = json.sort((a, b) => a.name.spanish.localeCompare(b.name.spanish));
+          const orderedBirds = json.sort((a, b) =>
+            a.name.spanish.localeCompare(b.name.spanish)
+          );
           dispatch(birdsActions.setBirds(orderedBirds));
           const newRandomBird = json[Math.floor(Math.random() * json.length)];
           setRandomBird(newRandomBird);
@@ -84,7 +88,7 @@ const Login = () => {
       const data = await response.data;
       localStorage.setItem("token", data.token);
       const info = jwt_decode(data.token);
-      dispatch(loginActions.login(info))
+      dispatch(loginActions.login(info));
       navigate("/");
     } catch (e) {
       dispatch(loadingActions.setLoading(false));
@@ -107,12 +111,12 @@ const Login = () => {
       ) : (
         <div id="login" className="d-flex flex-column align-items-center">
           {alertContent !== "" && (
-            <Alert variant="danger" className="mt-2 mb-0">
+            <CustomAlert variant="danger" className="mt-2 mb-0">
               {alertContent}
-            </Alert>
+            </CustomAlert>
           )}
-          <h2 className="my-5">Inicia sesión</h2>
-          <div className="d-flex flex-wrap mb-5 gap-5 justify-content-center">
+          <HeaderWithPhotos title="Inicia sesión" />
+          <div className="d-flex flex-wrap my-5 gap-5 justify-content-center">
             {randomBird ? (
               <img
                 id="login-image"
