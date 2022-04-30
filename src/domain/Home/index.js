@@ -18,7 +18,7 @@ const Home = () => {
       const r = Math.random() * (max - min) + min;
       return Math.floor(r);
     };
-    const thisRandomNumber = randomNumber(1, 200);
+    const thisRandomNumber = randomNumber(1, 185);
     setRandomNumber(thisRandomNumber);
     if (birds.length === 0) {
       dispatch(loadingActions.setLoading(true));
@@ -46,10 +46,13 @@ const Home = () => {
           <div
             id="home-photos"
             className="container-fluid d-flex flex-wrap justify-content-center"
-          >
+            style={{height: '590px',  overflow: 'hidden'}}
+         >
+
             {birds.slice(randomNumber, randomNumber + 30).map((b, i) => {
               return <img key={i} src={b.images?.main} alt={b.name?.spanish} />;
             })}
+
           </div>
         </div>
       )}
