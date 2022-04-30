@@ -4,16 +4,26 @@
     padding-left: 20px;
     padding-right: 20px;
   }
-  #icon {
+  #icon, #see-image-icon {
     color: #8bc34a;
     padding-bottom: 5px;
+    z-index: 9;
   }
-  #icon:hover {
+  #see-image-icon {
+    position: absolute;
+    top:0.2em;
+    right:0.5em;
+    color: #bef67a
+  }
+  #icon:hover, #see-image-icon:hover {
     cursor: pointer;
   }
   #photo-container {
     width: 450px;
     height: 450px;
+    z-index: 2;
+    display: inline-block;
+    position: relative;
   }
   #info {
     width: 400px;

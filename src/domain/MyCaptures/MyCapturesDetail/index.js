@@ -7,6 +7,7 @@ import { userPhotosActions } from "../../../store/userPhotos";
 import { Button, Alert, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeftCircleFill } from "react-icons/bs";
+import { IoSearchCircleSharp } from "react-icons/io5";
 import PhotosService from "../../../request/services/PhotosService";
 import moment from "moment";
 
@@ -25,6 +26,7 @@ const MyCapturesDetail = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const handleCloseConfirmationModal = () => setShowConfirmationModal(false);
   const handleShowConfirmationModal = () => setShowConfirmationModal(true);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   //Traigo los datos del ave desde las fotos del usuario guardadas en redux
   useEffect(() => {
@@ -117,6 +119,22 @@ const MyCapturesDetail = () => {
             </Modal.Footer>
           </Modal>
 
+          <Modal
+            show={showPhotoModal}
+            fullscreen={true}
+            onHide={() => setShowPhotoModal(false)}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Tu captura de {bird.name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="d-flex justify-content-center">
+              <img
+                src={bird.photo}
+                alt={bird.name}
+              />
+            </Modal.Body>
+          </Modal>
+
           <div className="container d-flex mt-5 mb-2 align-items-center justify-content-between px-4">
             <div
               id="mycapturesdetail-header"
@@ -137,13 +155,20 @@ const MyCapturesDetail = () => {
           <div className="container d-flex flex-wrap justify-content-evenly align-items-center gap-5 mt-4 mb-5">
             <div
               id="photo-container"
-              className=" d-flex align-items-center justify-content-center"
+              className=" d-flex  justify-content-center align-items-start mt-5"
             >
               <img
                 src={bird.photo}
                 alt={bird.name}
-                style={{ maxHeight: "450px", maxWidth: "450px" }}
+                style={{
+                  maxWidth: "450px",
+                  height: "auto",
+                  borderRadius: "20px",
+                }}
               />
+              <h1 id="see-image-icon">
+                <IoSearchCircleSharp onClick={() => setShowPhotoModal(true)} />
+              </h1>
             </div>
             <div id="info" className="wrap-reverse">
               <p>
