@@ -74,6 +74,7 @@ const CustomNavbar = ({ ...restOfProps }) => {
         </Navbar>
       ) : (
         <Navbar
+          id="navbar"
           style={{ height: "56px" }}
           collapseOnSelect
           className="navbar"
