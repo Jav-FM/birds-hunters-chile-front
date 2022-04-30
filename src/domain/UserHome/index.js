@@ -22,7 +22,6 @@ const UserHome = () => {
 
   // Traigo desde base de datos las capturas actualizadas
   useEffect(() => {
-    console.log(userData.id)
     const getUserPhotos = async () => {
       try {
         const response = await PhotosService.getPhotoByUser(userData.id);
@@ -34,7 +33,6 @@ const UserHome = () => {
           setAlertContent("No se pudo establecer conexión con el servidor.");
         } else if (!e.data.error) {
           setAlertContent(e.data);
-          console.log(e.data);
         } else {
           setAlertContent(e.data.error);
         }

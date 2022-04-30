@@ -108,7 +108,6 @@ const EditCapture = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
-            console.log(url)
             const form = new FormData(e.target);
             form.append("bird_id", params.bird_id);
             form.append("user_id", userData.id);

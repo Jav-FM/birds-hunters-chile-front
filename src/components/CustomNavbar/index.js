@@ -18,9 +18,9 @@ const CustomNavbar = ({ ...restOfProps }) => {
   //Manejo de logout, se borra token de localStorage y se "vacía" el store de redux
   const handleLogout = () => {
     dispatch(loadingActions.setLoading(true));
+    localStorage.removeItem("token");
     dispatch(loginActions.logout());
     dispatch(userPhotosActions.setUserPhotos([]));
-    localStorage.removeItem("token");
     navigate("/");
   };
 

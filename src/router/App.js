@@ -44,7 +44,7 @@ function App() {
     } else {
       setMainPadding("0");
     }
-  }, []); // eslint-disable-line 
+  }, [loginState]); // eslint-disable-line 
 
   //Devuelvo las rutas según el estado de login y la validación de token
   return (

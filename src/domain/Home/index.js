@@ -21,7 +21,6 @@ const Home = () => {
     const thisRandomNumber = randomNumber(1, 200);
     setRandomNumber(thisRandomNumber);
     if (birds.length === 0) {
-      console.log("aqui");
       dispatch(loadingActions.setLoading(true));
       fetch("https://aves.ninjas.cl/api/birds")
         .then((response) => response.json())

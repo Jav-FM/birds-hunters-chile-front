@@ -8,7 +8,7 @@ const CustomFooter = ({ ...restOfProps }) => {
       <Container fluid>
         <Nav id="footer-content" className="d-flex flex-column align-items-center justify-content-center">
           <Nav.Item className="footer-item">
-          © Birds Hunters 2022
+          © Birds Hunters Chile 2022
           </Nav.Item>
           <Nav.Item className="footer-item">
             Este sitio utiliza la API disponibilizada por
