@@ -27,7 +27,10 @@ const UserHome = () => {
       try {
         const response = await PhotosService.getPhotoByUser(userData.id);
         const { data } = await response.data;
-        dispatch(userPhotosActions.setUserPhotos(data));
+        const orderedUserPhotos = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        dispatch(userPhotosActions.setUserPhotos(orderedUserPhotos));
       } catch (e) {
         dispatch(loadingActions.setLoading(false));
         if (!e.data) {
@@ -43,9 +46,9 @@ const UserHome = () => {
       }
     };
 
-      dispatch(loadingActions.setLoading(true));
-      getUserPhotos();
-    
+    dispatch(loadingActions.setLoading(true));
+    getUserPhotos();
+
     dispatch(loadingActions.setLoading(false));
   }, []);
 
@@ -103,7 +106,7 @@ const UserHome = () => {
                 {userPhotos.length === 0 ? (
                   <h3>No aplica</h3>
                 ) : (
-                  <h3 style={{textAlign: 'center'}}>{predominantOrder}</h3>
+                  <h3 style={{ textAlign: "center" }}>{predominantOrder}</h3>
                 )}
               </div>
               <div className="userhome-card d-flex flex-column justify-content-center align-items-center mt-5">

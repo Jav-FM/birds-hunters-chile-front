@@ -124,7 +124,10 @@ const EditCapture = () => {
                 userData.id
               );
               const { data } = await getPhotosResponse.data;
-              dispatch(userPhotosActions.setUserPhotos(data));
+              const orderedUserPhotos = data.sort((a, b) =>
+                a.name.localeCompare(b.name)
+              );
+              dispatch(userPhotosActions.setUserPhotos(orderedUserPhotos));
               navigate("/mycaptures");
             }
           });

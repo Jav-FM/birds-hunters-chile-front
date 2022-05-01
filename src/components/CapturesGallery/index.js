@@ -41,17 +41,6 @@ const CapturesGallery = ({ ...restOfProps }) => {
     }
   };
 
-  //estado inicial de paginador
-  const initialState = {
-    data: userPhotos,
-    offset: 0,
-    numberPerPage: 12,
-    pageCount: 0,
-    currentData: [],
-    activePage: 1,
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
-
   //aplicación de filtros por nombre y por orden taxonómico
   useEffect(() => {
     if (nameFilter !== "" && filteredOrder === "") {
@@ -76,6 +65,17 @@ const CapturesGallery = ({ ...restOfProps }) => {
       dispatch({ type: "setData", payload: userPhotos });
     }
   }, [nameFilter, filteredOrder, userPhotos]);
+
+  //estado inicial de paginador
+  const initialState = {
+    data: userPhotos,
+    offset: 0,
+    numberPerPage: 12,
+    pageCount: 0,
+    currentData: [],
+    activePage: 1,
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   //Dispatch de paginador
   useEffect(() => {
@@ -121,7 +121,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
   }
 
   //manejo de cambio en input para filtro de nombres
-  const handleChangeInpur = (e) => {
+  const handleChangeInput = (e) => {
     e.preventDefault(); // prevent the default action
     setNameFilter(e.target.value); // set name to e.target.value (event)
   };
@@ -161,7 +161,7 @@ const CapturesGallery = ({ ...restOfProps }) => {
                 style={{ width: "0px" }}
                 type="text"
                 value={nameFilter}
-                onChange={handleChangeInpur}
+                onChange={handleChangeInput}
               />
             </InputGroup>
           </div>
@@ -174,21 +174,18 @@ const CapturesGallery = ({ ...restOfProps }) => {
             <div className="d-flex flex-wrap gap-4 justify-content-center mb-4">
               {state.currentData &&
                 state.currentData.map((item, index) => (
-                    <Card
-                      className="bird-card"
-                      key={index}
-                      style={{ width: "25rem" }}
-                      onClick={() => navigate(`/mycapturesdetail/${item.id}`)}
-                    >
-                      <Card.Img
-                        variant="top"
-                        src={item.photo}
-                      />
+                  <Card
+                    className="bird-card"
+                    key={index}
+                    style={{ width: "25rem" }}
+                    onClick={() => navigate(`/mycapturesdetail/${item.id}`)}
+                  >
+                    <Card.Img variant="top" src={item.photo} />
 
-                      <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
-                        <Card.Title>{item.name}</Card.Title>
-                      </Card.Body>
-                    </Card>
+                    <Card.Body className="pb-2 d-flex justify-content-center align-items-end">
+                      <Card.Title>{item.name}</Card.Title>
+                    </Card.Body>
+                  </Card>
                 ))}
             </div>
 

@@ -46,7 +46,10 @@ const MyCapturesDetail = () => {
           userData.id
         );
         const { data } = await getPhotosResponse.data;
-        dispatch(userPhotosActions.setUserPhotos(data));
+        const orderedUserPhotos = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        dispatch(userPhotosActions.setUserPhotos(orderedUserPhotos));
         dispatch(loadingActions.setLoading(false));
         handleShowConfirmationModal();
       }
@@ -129,10 +132,7 @@ const MyCapturesDetail = () => {
               <Modal.Title>Tu captura de {bird.name}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="d-flex justify-content-center">
-              <img
-                src={bird.photo}
-                alt={bird.name}
-              />
+              <img src={bird.photo} alt={bird.name} />
             </Modal.Body>
           </Modal>
 

@@ -25,7 +25,10 @@ const MyCaptures = () => {
       try {
         const response = await PhotosService.getPhotoByUser(userData.id);
         const { data } = await response.data;
-        dispatch(userPhotosActions.setUserPhotos(data));
+        const orderedUserPhotos = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        dispatch(userPhotosActions.setUserPhotos(orderedUserPhotos));
       } catch (e) {
         dispatch(loadingActions.setLoading(false));
         if (!e.data) {
