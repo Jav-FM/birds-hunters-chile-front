@@ -221,7 +221,7 @@ const Register = () => {
         'error: duplicate key value violates unique constraint "users_email_key"'
       ) {
         setAlertContent(
-          "eL correo ingresado ya existe en nuestra base de datos."
+          "El correo ingresado ya existe en nuestra base de datos."
         );
       } else {
         setAlertContent(e.data.error);
