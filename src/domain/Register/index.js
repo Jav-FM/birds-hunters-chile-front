@@ -215,8 +215,13 @@ const Register = () => {
         e.data.error ==
         'error: duplicate key value violates unique constraint "users_rut_key"'
       ) {
+        setAlertContent("El rut ingresado ya existe en nuestra base de datos.");
+      } else if (
+        e.data.error ==
+        'error: duplicate key value violates unique constraint "users_email_key"'
+      ) {
         setAlertContent(
-          "El rut o el correo ingresado ya existe en nuestra base de datos."
+          "eL correo ingresado ya existe en nuestra base de datos."
         );
       } else {
         setAlertContent(e.data.error);
