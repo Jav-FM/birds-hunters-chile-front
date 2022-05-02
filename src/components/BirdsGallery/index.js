@@ -14,99 +14,11 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
   const [nameFilter, setNameFilter] = useState("");
   const [seeingCaptured, setSeeingCaptured] = useState(true);
   const [seeingNotCaptured, setSeeingNotCaptured] = useState(true);
+  const [birdsForGallery, setBirdsForGallery] = useState(birds);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(12);
 
-  //reducer de paginador
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "setData":
-        return { ...state, data: action.payload };
-      case "setPageCount":
-        return { ...state, pageCount: action.payload };
-      case "setCurrentData":
-        return { ...state, currentData: action.payload };
-      case "setOffset":
-        return { ...state, offset: action.payload };
-      case "setActivePage":
-        return { ...state, activePage: action.payload };
-      default:
-        throw new Error();
-    }
-  };
-
-    //Aplicacion de filtros 
-    useEffect(() => {
-      const captureBirdsIds = userPhotos.map((p) => p.bird_id);
-      let filteredBirds = birds;
-      if (!seeingCaptured) {
-        filteredBirds = birds.filter((b) => !captureBirdsIds.includes(b.uid));
-      } else if (!seeingNotCaptured) {
-        filteredBirds = birds.filter((b) => captureBirdsIds.includes(b.uid));
-      }
-      if (nameFilter !== "") {
-       const nameFilteredBirds = filteredBirds.filter((b) =>
-          b.name.spanish.toLowerCase().includes(nameFilter.toLowerCase())
-        );
-        dispatch({ type: "setData", payload: nameFilteredBirds  });
-      } else {
-        dispatch({ type: "setData", payload: filteredBirds });
-      }
-    }, [seeingCaptured, seeingNotCaptured, nameFilter, birds]);
-
-  //initialState para el paginador
-  const initialState = {
-    data: birds,
-    offset: 0,
-    numberPerPage: 12,
-    pageCount: 0,
-    currentData: [],
-    activePage: 1,
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  // dispatch para paginador
-  useEffect(() => {
-    dispatch({
-      type: "setCurrentData",
-      payload: state.data.slice(
-        state.offset,
-        state.offset + state.numberPerPage
-      ),
-    });
-  }, [state.numberPerPage, state.offset, state.data, nameFilter, birds]);
-
-  // función para manejo de clics en paginador
-  const handlePaginationClick = (e) => {
-    const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
-    dispatch({
-      type: "setOffset",
-      payload: (clickValue - 1) * state.numberPerPage,
-    });
-    dispatch({
-      type: "setActivePage",
-      payload: clickValue,
-    });
-    dispatch({
-      type: "setPageCount",
-      payload: state.data.length / state.numberPerPage,
-    });
-  };
-
-  //definición de páginas en paginador
-  const paginationItems = [];
-  const amountPages = state.data.length / state.numberPerPage;
-  for (let number = 1; number <= amountPages; number++) {
-    paginationItems.push(
-      <Pagination.Item
-        key={number}
-        active={number === state.activePage}
-        data-page={number}
-      >
-        {number}
-      </Pagination.Item>
-    );
-  }
-
-  //manejo de cambios en inputs
+  //manejo filtro por nombre
   const handleChangeInput = (e) => {
     e.preventDefault();
     setNameFilter(e.target.value);
@@ -136,7 +48,46 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
     }
   };
 
+  //Aplicacion de filtros
+  useEffect(() => {
+    setCurrentPage(1);
+    const captureBirdsIds = userPhotos.map((p) => p.bird_id);
+    let filteredBirds = birds;
+    if (!seeingCaptured) {
+      filteredBirds = birds.filter((b) => !captureBirdsIds.includes(b.uid));
+    } else if (!seeingNotCaptured) {
+      filteredBirds = birds.filter((b) => captureBirdsIds.includes(b.uid));
+    }
+    if (nameFilter !== "") {
+      const nameFilteredBirds = filteredBirds.filter((b) =>
+        b.name.spanish.toLowerCase().includes(nameFilter.toLowerCase())
+      );
+      setBirdsForGallery(nameFilteredBirds)
+    } else {
+      setBirdsForGallery(filteredBirds)
+    }
+  }, [seeingCaptured, seeingNotCaptured, nameFilter, birds]);
 
+  //Index para paginador
+  const indexOfLastBird = currentPage * cardsPerPage;
+  const indexOfFirstBird = indexOfLastBird - cardsPerPage;
+  const currentBirds = birdsForGallery.slice(indexOfFirstBird, indexOfLastBird);
+
+  //Creacion de paginas para paginator
+  const paginationItems = [];
+  for (let i = 1; i <= Math.ceil(birdsForGallery.length / cardsPerPage); i++) {
+    paginationItems.push(
+      <Pagination.Item key={i} active={i === currentPage} data-page={i}>
+        {i}
+      </Pagination.Item>
+    );
+  }
+
+  //Manejo de clics en paginador
+  const handlePaginationClick = (e) => {
+    const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
+    setCurrentPage(clickValue);
+  };
 
   return (
     <React.Fragment>
@@ -207,8 +158,8 @@ const BirdsGallery = ({ birds, ...restOfProps }) => {
             {...restOfProps}
           >
             <div className="d-flex flex-wrap gap-4 justify-content-center mb-4">
-              {state.currentData &&
-                state.currentData.map((item, index) => (
+              {currentBirds &&
+                currentBirds.map((item, index) => (
                   <Card
                     className="bird-card"
                     key={index}

@@ -8,10 +8,14 @@ import { useSelector } from "react-redux";
 const CapturesGallery = ({ ...restOfProps }) => {
   const userPhotos = useSelector((state) => state.userPhotos.userPhotos);
   const navigate = useNavigate();
-  const [nameFilter, setNameFilter] = useState("");
   const [ordersForSelector, setOrdersForSelector] = useState([]);
   const [filteredOrder, setFilteredOrder] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [photosForGallery, setPhotosForGallery] = useState(userPhotos);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(12);
 
+  //Filtro por orden taxonomico
   useEffect(() => {
     const orders = userPhotos.map((p) => p.order);
     const result = orders.reduce((acc, item) => {
@@ -23,36 +27,25 @@ const CapturesGallery = ({ ...restOfProps }) => {
     setOrdersForSelector(result);
   }, [userPhotos]);
 
-  //reducer de paginador
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "setData":
-        return { ...state, data: action.payload };
-      case "setPageCount":
-        return { ...state, pageCount: action.payload };
-      case "setCurrentData":
-        return { ...state, currentData: action.payload };
-      case "setOffset":
-        return { ...state, offset: action.payload };
-      case "setActivePage":
-        return { ...state, activePage: action.payload };
-      default:
-        throw new Error();
-    }
+  //manejo de cambio en input para filtro de nombres
+  const handleChangeInput = (e) => {
+    e.preventDefault(); // prevent the default action
+    setNameFilter(e.target.value); // set name to e.target.value (event)
   };
 
   //aplicación de filtros por nombre y por orden taxonómico
   useEffect(() => {
+    setCurrentPage(1);
     if (nameFilter !== "" && filteredOrder === "") {
       const filteredPhotosByName = userPhotos.filter((b) =>
         b.name.toLowerCase().includes(nameFilter.toLowerCase())
       );
-      dispatch({ type: "setData", payload: filteredPhotosByName });
+      setPhotosForGallery(filteredPhotosByName);
     } else if (nameFilter === "" && filteredOrder !== "") {
       const filteredPhotosByOrder = userPhotos.filter(
         (b) => b.order === filteredOrder
       );
-      dispatch({ type: "setData", payload: filteredPhotosByOrder });
+      setPhotosForGallery(filteredPhotosByOrder);
     } else if (nameFilter !== "" && filteredOrder !== "") {
       const filteredPhotosByOrder = userPhotos.filter(
         (b) => b.order === filteredOrder
@@ -60,70 +53,34 @@ const CapturesGallery = ({ ...restOfProps }) => {
       const filteredPhotosByOrderAndName = filteredPhotosByOrder.filter((b) =>
         b.name.toLowerCase().includes(nameFilter.toLowerCase())
       );
-      dispatch({ type: "setData", payload: filteredPhotosByOrderAndName });
+      setPhotosForGallery(filteredPhotosByOrderAndName);
     } else {
-      dispatch({ type: "setData", payload: userPhotos });
+      setPhotosForGallery(userPhotos);
     }
   }, [nameFilter, filteredOrder, userPhotos]);
 
-  //estado inicial de paginador
-  const initialState = {
-    data: userPhotos,
-    offset: 0,
-    numberPerPage: 12,
-    pageCount: 0,
-    currentData: [],
-    activePage: 1,
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
+  //Index para paginador
+  const indexOfLastPhoto = currentPage * cardsPerPage;
+  const indexOfFirstPhoto = indexOfLastPhoto - cardsPerPage;
+  const currentPhotos = photosForGallery.slice(
+    indexOfFirstPhoto,
+    indexOfLastPhoto
+  );
 
-  //Dispatch de paginador
-  useEffect(() => {
-    dispatch({
-      type: "setCurrentData",
-      payload: state.data.slice(
-        state.offset,
-        state.offset + state.numberPerPage
-      ),
-    });
-  }, [state.numberPerPage, state.offset, state.data, nameFilter, userPhotos]);
-
-  //manejo de clics en paginador
-  const handlePaginationClick = (e) => {
-    const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
-    dispatch({
-      type: "setOffset",
-      payload: (clickValue - 1) * state.numberPerPage,
-    });
-    dispatch({
-      type: "setActivePage",
-      payload: clickValue,
-    });
-    dispatch({
-      type: "setPageCount",
-      payload: state.data.length / state.numberPerPage,
-    });
-  };
-
-  //Definicion de paginas en paginador
+  //Creacion de paginas para paginator
   const paginationItems = [];
-  const amountPages = state.data.length / state.numberPerPage;
-  for (let number = 1; number <= amountPages; number++) {
+  for (let i = 1; i <= Math.ceil(photosForGallery.length / cardsPerPage); i++) {
     paginationItems.push(
-      <Pagination.Item
-        key={number}
-        active={number === state.activePage}
-        data-page={number}
-      >
-        {number}
+      <Pagination.Item key={i} active={i === currentPage} data-page={i}>
+        {i}
       </Pagination.Item>
     );
   }
 
-  //manejo de cambio en input para filtro de nombres
-  const handleChangeInput = (e) => {
-    e.preventDefault(); // prevent the default action
-    setNameFilter(e.target.value); // set name to e.target.value (event)
+  //Manejo de clics en paginador
+  const handlePaginationClick = (e) => {
+    const clickValue = parseInt(e.target.getAttribute("data-page"), 10);
+    setCurrentPage(clickValue);
   };
 
   return (
@@ -172,8 +129,8 @@ const CapturesGallery = ({ ...restOfProps }) => {
             {...restOfProps}
           >
             <div className="d-flex flex-wrap gap-4 justify-content-center mb-4">
-              {state.currentData &&
-                state.currentData.map((item, index) => (
+              {currentPhotos &&
+                currentPhotos.map((item, index) => (
                   <Card
                     className="bird-card"
                     key={index}
